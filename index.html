@@ -83,6 +83,16 @@
     .social a:hover{ color:var(--green); border-color:var(--green); transform:translateY(-1px); background:rgba(79,224,138,.12); }
     .social a svg{ width:16px; height:16px; display:block; }
 
+    .bgm-toggle{ position:fixed; bottom:20px; right:24px; z-index:5; width:38px; height:38px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid rgba(159,188,171,.24); border-radius:50%; color:var(--ink);
+      background:rgba(6,13,9,.32); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+      cursor:pointer; animation:rise 1.2s both .7s;
+      transition:color .2s, border-color .2s, background .2s, transform .2s; }
+    .bgm-toggle:hover{ color:var(--green); border-color:var(--green); transform:translateY(-1px); }
+    .bgm-toggle.playing{ color:var(--green); border-color:rgba(79,224,138,.45); }
+    .bgm-toggle svg{ width:18px; height:18px; display:block; }
+
     footer{ position:fixed; z-index:3; left:24px; bottom:20px; font-size:11.5px; color:rgba(159,188,171,.7); animation:rise 1.3s both .7s; }
     footer b{ color:var(--gold); font-weight:700; }
     footer a{ color:inherit; text-decoration:none; }
@@ -152,6 +162,10 @@
 
   <footer>Open&nbsp;source · MIT · <a href="docs/">Docs</a> &nbsp;·&nbsp; <a href="app.html"><b>Innovate with Sanjeev</b></a></footer>
 
+  <!-- Landing-only ambient music -->
+  <audio id="bgm" src="bodhi-background-music.mp3" loop preload="auto"></audio>
+  <button id="bgmToggle" class="bgm-toggle" type="button" aria-label="Toggle background music" title="Music on / off"></button>
+
   <script>
     (function () {
       var c = document.getElementById('spark'), x = c.getContext('2d');
@@ -178,6 +192,37 @@
       if (reduce){ x.globalAlpha=.5; for (var i=0;i<parts.length;i++){ x.fillStyle=parts[i].gold?'#f3c969':'#7df0aa'; x.beginPath(); x.arc(parts[i].x,parts[i].y,parts[i].r,0,6.2832); x.fill(); } }
       else frame();
       window.addEventListener('resize', init);
+    })();
+  </script>
+
+  <script>
+    // Landing-only ambient music: autoplay if allowed, else start on first
+    // interaction; a toggle lets the user mute (remembered). Stops on unload.
+    (function () {
+      var audio = document.getElementById('bgm'), btn = document.getElementById('bgmToggle');
+      if (!audio || !btn) return;
+      audio.volume = 0.35;
+      var ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19.5 5a9 9 0 0 1 0 14"/></svg>';
+      var OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+      var userOff = false;
+      try { userOff = localStorage.getItem('bodhi-bgm') === 'off'; } catch (e) {}
+      function render() { var on = !audio.paused; btn.innerHTML = on ? ON : OFF; btn.classList.toggle('playing', on); btn.setAttribute('aria-pressed', String(on)); }
+      function tryPlay() { var p = audio.play(); if (p && p.then) p.then(render).catch(render); else render(); }
+      function removeStart() { ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.removeEventListener(ev, autostart); }); }
+      function autostart(e) { if (e && e.target && e.target.closest && e.target.closest('#bgmToggle')) return; removeStart(); if (!userOff && audio.paused) tryPlay(); }
+      btn.addEventListener('click', function () {
+        removeStart();
+        if (audio.paused) { userOff = false; try { localStorage.removeItem('bodhi-bgm'); } catch (e) {} tryPlay(); }
+        else { userOff = true; try { localStorage.setItem('bodhi-bgm', 'off'); } catch (e) {} audio.pause(); render(); }
+      });
+      if (!userOff) {
+        tryPlay();
+        document.addEventListener('pointerdown', autostart);
+        document.addEventListener('keydown', autostart);
+        document.addEventListener('touchstart', autostart, { passive: true });
+      }
+      render();
+      window.addEventListener('pagehide', function () { try { audio.pause(); } catch (e) {} });
     })();
   </script>
 </body>
