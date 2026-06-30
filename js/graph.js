@@ -20,6 +20,7 @@
   });
 
   // Concept nodes
+  const RELEASE_VERSION = (typeof RELEASE !== 'undefined' && RELEASE) ? RELEASE.version : null;
   GRAPH.nodes.forEach((n) => {
     elements.push({
       data: {
@@ -29,6 +30,7 @@
         cluster: n.cluster,
         level: n.level,
         color: CLUSTERS[n.cluster].color,
+        isNew: !!(RELEASE_VERSION && n.added === RELEASE_VERSION),
       },
     });
   });
@@ -84,6 +86,10 @@
           'transition-duration': '0.2s',
         },
       },
+      // "New this release" — green ring + soft glow so additions stand out
+      { selector: 'node[?isNew]', style: {
+          'border-width': 3.5, 'border-color': '#4fe08a',
+          'overlay-color': '#4fe08a', 'overlay-opacity': 0.1, 'overlay-padding': 5 } },
       {
         selector: 'node[?isCluster]',
         style: {
@@ -205,7 +211,7 @@
     const cmpIdxFor = compareSetIndexFor(id);
     panel.innerHTML = `
       <button class="panel-close" id="panelClose">×</button>
-      <div class="panel-tag" style="--c:${c.color}">${c.label} · Level ${n.level} — ${LEVELS[n.level]}</div>
+      <div class="panel-tag" style="--c:${c.color}">${c.label} · Level ${n.level} — ${LEVELS[n.level]}${RELEASE_VERSION && n.added === RELEASE_VERSION ? ` <span class="new-badge">✦ New in ${RELEASE_VERSION}</span>` : ''}</div>
       <h2 style="--c:${c.color}">${n.label}</h2>
       <p class="summary">${n.summary}</p>
       ${cmpIdxFor !== -1 ? `<button class="panel-action" data-compare="${cmpIdxFor}">${TABLE_IC} Compare ${GRAPH.comparisons[cmpIdxFor].title}</button>` : ''}
@@ -335,23 +341,62 @@
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) searchResults.classList.remove('open');
   });
 
-  // ---- Level filter ----------------------------------------------------------
+  // ---- Filters: level + cluster + "new only" (one combined predicate) --------
   const activeLevels = new Set([1, 2, 3, 4, 5]);
+  const activeClusters = new Set(Object.keys(CLUSTERS));
+  let newOnly = false;
+
+  // "New" focus set = the new concepts + their direct neighbours, so additions
+  // are shown wired into the existing graph rather than as floating islands.
+  const newIds = new Set();
+  GRAPH.nodes.forEach((n) => { if (RELEASE_VERSION && n.added === RELEASE_VERSION) newIds.add(n.id); });
+  const newFocusIds = new Set(newIds);
+  GRAPH.edges.forEach((e) => { if (newIds.has(e.s)) newFocusIds.add(e.t); if (newIds.has(e.t)) newFocusIds.add(e.s); });
+
+  function nodeVisible(n) {
+    if (newOnly) return newFocusIds.has(n.id());
+    if (!activeLevels.has(n.data('level'))) return false;
+    if (!activeClusters.has(n.data('cluster'))) return false;
+    return true;
+  }
+  function applyFilters() {
+    cy.batch(() => {
+      cy.nodes('[!isCluster]').forEach((n) => {
+        if (nodeVisible(n)) n.removeClass('dim').style('display', 'element');
+        else { n.addClass('dim'); n.style('display', 'none'); }
+      });
+      // hide cluster parents that have no visible children
+      cy.nodes('[?isCluster]').forEach((p) => {
+        const shown = p.children('[!isCluster]').filter((k) => k.style('display') !== 'none');
+        p.style('display', shown.length ? 'element' : 'none');
+      });
+    });
+  }
+
   document.querySelectorAll('.level-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const lvl = parseInt(chip.dataset.level, 10);
       if (activeLevels.has(lvl)) { activeLevels.delete(lvl); chip.classList.remove('active'); }
       else { activeLevels.add(lvl); chip.classList.add('active'); }
-      applyLevelFilter();
+      applyFilters();
     });
   });
-  function applyLevelFilter() {
-    cy.batch(() => {
-      cy.nodes('[!isCluster]').forEach((n) => {
-        if (activeLevels.has(n.data('level'))) n.removeClass('dim').style('display', 'element');
-        else { n.addClass('dim'); n.style('display', 'none'); }
+
+  // "New this release" chip — toggles showing only newly-added concepts
+  const newChip = document.getElementById('newChip');
+  if (newChip) {
+    const newCount = cy.nodes('[?isNew]').length;
+    if (!newCount) { newChip.style.display = 'none'; }
+    else {
+      newChip.querySelector('.new-count').textContent = newCount;
+      newChip.addEventListener('click', () => {
+        newOnly = !newOnly;
+        newChip.classList.toggle('active', newOnly);
+        applyFilters();
+        if (newOnly) { const ns = cy.nodes('[!isCluster]').filter((el) => newFocusIds.has(el.id())); if (ns.length) cy.animate({ fit: { eles: ns, padding: 70 } }, { duration: 420 }); }
+        else cy.animate({ fit: { eles: cy.elements(':visible'), padding: 40 } }, { duration: 420 });
       });
-    });
+    }
   }
 
   // ---- Cluster legend: grouped by learning phase, collapsible, with counts ---
@@ -374,9 +419,9 @@
       <div class="legend-group-body">
         ${g.clusters.map((id) => {
           const c = CLUSTERS[id];
-          return `<div class="legend-item" data-cluster="${id}" title="Zoom to ${c.label}">
-            <span class="dot" style="background:${c.color}"></span>
-            <span class="li-label">${c.label}</span>
+          return `<div class="legend-item" data-cluster="${id}">
+            <button class="legend-toggle" aria-pressed="true" title="Show / hide ${c.label}"><span class="dot" style="background:${c.color}"></span></button>
+            <span class="li-label" title="Zoom to ${c.label}">${c.label}</span>
             <span class="legend-count">${clusterCount[id] || 0}</span>
           </div>`;
         }).join('')}
@@ -391,12 +436,26 @@
       head.setAttribute('aria-expanded', String(!collapsed));
     };
   });
-  // click a cluster -> zoom to it
-  legend.querySelectorAll('[data-cluster]').forEach((el) => {
+  // click a cluster label -> zoom to it
+  legend.querySelectorAll('.legend-item .li-label').forEach((el) => {
     el.onclick = () => {
-      const cid = el.getAttribute('data-cluster');
+      const cid = el.closest('.legend-item').getAttribute('data-cluster');
       const nodes = cy.nodes(`[cluster = "${cid}"]`);
-      cy.animate({ fit: { eles: nodes, padding: 80 } }, { duration: 400 });
+      if (nodes.length) cy.animate({ fit: { eles: nodes, padding: 80 } }, { duration: 400 });
+    };
+  });
+  // toggle a cluster's swatch -> show / hide that cluster
+  legend.querySelectorAll('.legend-toggle').forEach((btn) => {
+    btn.onclick = (ev) => {
+      ev.stopPropagation();
+      const item = btn.closest('.legend-item');
+      const cid = item.getAttribute('data-cluster');
+      const on = activeClusters.has(cid);
+      if (on) { activeClusters.delete(cid); }
+      else { activeClusters.add(cid); }
+      item.classList.toggle('off', on);
+      btn.setAttribute('aria-pressed', String(!on));
+      applyFilters();
     };
   });
 

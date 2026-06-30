@@ -93,6 +93,10 @@ const RELATIONS = {
     "style": "solid"
   }
 };
+const RELEASE = {
+  "version": "0.4.0",
+  "label": "v0.4.0"
+};
 const GRAPH = {
   "nodes": [
     {
@@ -213,6 +217,28 @@ const GRAPH = {
           "u": "https://arxiv.org/abs/2307.03172"
         }
       ]
+    },
+    {
+      "id": "sampling",
+      "label": "Sampling & Decoding",
+      "type": "Concept",
+      "cluster": "foundations",
+      "level": 2,
+      "summary": "How the next token is chosen from the probability distribution — greedy, temperature, top-k, top-p (nucleus), and beam search.",
+      "detail": "Once the output head turns the final hidden state into a probability distribution over the vocabulary (logits → softmax), a *decoding strategy* picks the next token. **Greedy/argmax** is deterministic but repetitive. **Temperature** rescales the logits before softmax — below 1 sharpens toward the top token, above 1 flattens for more diversity. **Top-k** samples only from the k most likely tokens; **top-p (nucleus)** keeps the smallest set whose cumulative probability exceeds p, adapting the cutoff to the distribution's shape. **Beam search** tracks several high-probability sequences at once. These knobs trade determinism and factual reliability against diversity and creativity, and they underpin test-time strategies that draw many candidates (self-consistency, best-of-N).",
+      "whenToUse": "Tuning generation: low temperature / greedy for factual and code tasks; higher temperature + top-p for creative diversity or when sampling many candidates.",
+      "code": "# temperature + top-p (nucleus) sampling over logits\nimport torch\ndef sample(logits, temperature=0.8, top_p=0.95):\n    logits = logits / temperature\n    probs = torch.softmax(logits, dim=-1)\n    sorted_probs, idx = torch.sort(probs, descending=True)\n    keep = torch.cumsum(sorted_probs, dim=-1) <= top_p\n    keep[0] = True                      # always keep the top token\n    sorted_probs[~keep] = 0\n    choice = idx[torch.multinomial(sorted_probs, 1)]\n    return choice",
+      "refs": [
+        {
+          "t": "The Curious Case of Neural Text Degeneration (nucleus sampling)",
+          "u": "https://arxiv.org/abs/1904.09751"
+        },
+        {
+          "t": "Hierarchical Neural Story Generation (top-k)",
+          "u": "https://arxiv.org/abs/1805.04833"
+        }
+      ],
+      "added": "0.4.0"
     },
     {
       "id": "attention",
@@ -686,6 +712,28 @@ const GRAPH = {
           "u": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
         }
       ]
+    },
+    {
+      "id": "function-calling",
+      "label": "Function / Tool Calling",
+      "type": "Agent / Retrieval Method",
+      "cluster": "agents",
+      "level": 3,
+      "summary": "Models emit schema-constrained calls (a tool name + JSON arguments) that a runtime executes and feeds back — the substrate beneath tool-using agents.",
+      "detail": "Function (or tool) calling turns a free-form model into one that can *act*. Given a set of tool **schemas**, the model outputs a structured call — a tool name plus JSON arguments validated against the schema — rather than prose. The runtime executes the tool and returns the result, which the model consumes to decide the next step. **Constrained/structured decoding** (JSON mode, grammars, regex) guarantees the output is parseable, so the loop doesn't break on malformed text. This is the mechanism the [ReAct](/adaptation/react.md) reason-act loop and agent frameworks are built on, and protocols like [MCP](/agents/mcp.md) standardize how tools are described and invoked across hosts.",
+      "whenToUse": "Whenever the model must take actions or fetch data through code — calling APIs, querying databases, running tools — with reliable, parseable arguments instead of free text.",
+      "code": "tools = [{\n  \"name\": \"get_weather\",\n  \"description\": \"Current weather for a city\",\n  \"parameters\": {\"type\": \"object\",\n    \"properties\": {\"city\": {\"type\": \"string\"}}, \"required\": [\"city\"]},\n}]\n# model returns a structured call instead of prose:\n# {\"tool\": \"get_weather\", \"arguments\": {\"city\": \"Tokyo\"}}\nresult = run_tool(call[\"tool\"], **call[\"arguments\"])   # runtime executes\n# feed `result` back into the conversation for the next turn",
+      "refs": [
+        {
+          "t": "Toolformer",
+          "u": "https://arxiv.org/abs/2302.04761"
+        },
+        {
+          "t": "Gorilla (API-calling LLMs)",
+          "u": "https://arxiv.org/abs/2305.15334"
+        }
+      ],
+      "added": "0.4.0"
     },
     {
       "id": "graphrag",
@@ -1228,6 +1276,27 @@ const GRAPH = {
       ]
     },
     {
+      "id": "multi-agent",
+      "label": "Multi-Agent Systems",
+      "type": "Agent / Retrieval Method",
+      "cluster": "agents",
+      "level": 4,
+      "summary": "Decompose a task across specialized LLM agents (planner, workers, critic) that coordinate via messages or an orchestrator — trading tokens for reliability on complex work.",
+      "detail": "A multi-agent system splits work across several LLM agents with distinct **roles** — e.g. a *planner* that decomposes the goal, *workers* that execute sub-tasks (often in parallel), and a *critic/verifier* that reviews outputs — coordinated by message passing or a central orchestrator. The pattern buys independent perspectives and parallelism, which help with breadth, search, and adversarial checking (one agent verifies another), at the cost of more tokens and orchestration complexity. It's most worthwhile when a single agent's context window or reliability is the limiting factor; for simple tasks a single [ReAct](/adaptation/react.md) agent is cheaper and just as good. Frameworks like AutoGen and MetaGPT formalize the conversation protocols and role definitions.",
+      "whenToUse": "Complex, multi-step tasks that benefit from division of labor, parallel exploration, or independent review — when one agent's context or reliability is the bottleneck. Mind the token cost.",
+      "refs": [
+        {
+          "t": "AutoGen",
+          "u": "https://arxiv.org/abs/2308.08155"
+        },
+        {
+          "t": "MetaGPT",
+          "u": "https://arxiv.org/abs/2308.00352"
+        }
+      ],
+      "added": "0.4.0"
+    },
+    {
       "id": "awq",
       "label": "AWQ",
       "type": "Efficiency Technique",
@@ -1703,6 +1772,27 @@ const GRAPH = {
       ]
     },
     {
+      "id": "self-refine",
+      "label": "Self-Refine / Reflection",
+      "type": "Reasoning Method",
+      "cluster": "reasoning",
+      "level": 5,
+      "summary": "The model critiques its own output and revises it over one or more feedback rounds — iterative self-correction at inference time, no extra training.",
+      "detail": "Self-refine has the model generate an answer, then produce **feedback on its own output**, then **revise** — looping until a stopping condition. Reflexion extends this by keeping a memory of past critiques to steer later attempts. It's a test-time strategy orthogonal to sampling many answers: instead of drawing independent samples and voting ([self-consistency](/reasoning/self-consistency.md)), it *sequentially improves a single answer*. The catch is that ungrounded self-critique can plateau or even reinforce errors — reliable gains usually come when the feedback is anchored to an **external signal** (unit tests, a verifier, tool output) rather than the model judging itself.",
+      "whenToUse": "Tasks where a draft can be improved by inspection — code, writing, math — and you can afford extra passes. Gains are largest when feedback is grounded (tests, tools), not the model's unaided self-judgment.",
+      "refs": [
+        {
+          "t": "Self-Refine",
+          "u": "https://arxiv.org/abs/2303.17651"
+        },
+        {
+          "t": "Reflexion",
+          "u": "https://arxiv.org/abs/2303.11366"
+        }
+      ],
+      "added": "0.4.0"
+    },
+    {
       "id": "test-time-compute",
       "label": "Test-Time Compute Scaling",
       "type": "Reasoning Method",
@@ -1861,6 +1951,27 @@ const GRAPH = {
           "u": "https://arxiv.org/abs/2309.06180"
         }
       ]
+    },
+    {
+      "id": "pipeline-parallelism",
+      "label": "Pipeline Parallelism",
+      "type": "Efficiency Technique",
+      "cluster": "efficiency",
+      "level": 5,
+      "summary": "Split a model's layers into sequential stages across GPUs, streaming micro-batches through the pipeline to fit models too big for one device.",
+      "detail": "Pipeline parallelism partitions a model by **depth**: each GPU holds a contiguous block of layers (a *stage*) and passes activations to the next. To keep every stage busy instead of idle-waiting, the batch is split into **micro-batches** that flow through like an assembly line (GPipe), with schedules such as **1F1B** (PipeDream) interleaving forward and backward passes to shrink the idle \"bubble\" at the ends. It communicates only activations at stage boundaries — far less traffic than tensor parallelism's per-layer all-reduce — so it scales well *across* nodes; the trade-off is the pipeline bubble and the difficulty of balancing stage compute. At frontier scale it's combined with tensor + data parallelism (**3D parallelism**).",
+      "whenToUse": "Scaling across nodes when layers can be split into balanced stages — typically the third axis of 3D parallelism alongside tensor + data parallelism.",
+      "refs": [
+        {
+          "t": "GPipe",
+          "u": "https://arxiv.org/abs/1811.06965"
+        },
+        {
+          "t": "PipeDream (1F1B scheduling)",
+          "u": "https://arxiv.org/abs/1806.03377"
+        }
+      ],
+      "added": "0.4.0"
     },
     {
       "id": "prefix-caching",
@@ -2033,6 +2144,16 @@ const GRAPH = {
       "r": "combines"
     },
     {
+      "s": "function-calling",
+      "t": "react",
+      "r": "combines"
+    },
+    {
+      "s": "function-calling",
+      "t": "mcp",
+      "r": "combines"
+    },
+    {
       "s": "graphrag",
       "t": "rag",
       "r": "improves-on"
@@ -2065,6 +2186,16 @@ const GRAPH = {
     {
       "s": "mcp",
       "t": "rag",
+      "r": "combines"
+    },
+    {
+      "s": "multi-agent",
+      "t": "react",
+      "r": "builds-on"
+    },
+    {
+      "s": "multi-agent",
+      "t": "agent-memory",
       "r": "combines"
     },
     {
@@ -2583,6 +2714,16 @@ const GRAPH = {
       "r": "combines"
     },
     {
+      "s": "pipeline-parallelism",
+      "t": "tensor-parallelism",
+      "r": "alternative"
+    },
+    {
+      "s": "pipeline-parallelism",
+      "t": "fsdp-deepspeed",
+      "r": "combines"
+    },
+    {
       "s": "prefix-caching",
       "t": "kv-cache",
       "r": "improves-on"
@@ -2676,6 +2817,16 @@ const GRAPH = {
       "s": "pretraining",
       "t": "decoder-gpt",
       "r": "requires"
+    },
+    {
+      "s": "sampling",
+      "t": "logit-softmax",
+      "r": "builds-on"
+    },
+    {
+      "s": "sampling",
+      "t": "self-consistency",
+      "r": "combines"
     },
     {
       "s": "token",
@@ -2896,6 +3047,16 @@ const GRAPH = {
       "s": "self-consistency",
       "t": "test-time-compute",
       "r": "combines"
+    },
+    {
+      "s": "self-refine",
+      "t": "cot",
+      "r": "builds-on"
+    },
+    {
+      "s": "self-refine",
+      "t": "self-consistency",
+      "r": "alternative"
     },
     {
       "s": "test-time-compute",

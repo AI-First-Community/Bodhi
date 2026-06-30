@@ -150,6 +150,7 @@ function doExport() {
         description: n.summary,
         cluster: cluster,
         level: n.level,
+        added: n.added,
         tags: [cluster, (CONFIG.LEVELS[n.level] || '').toLowerCase().replace(/[^a-z]+/g, '-')].filter(Boolean),
         when_to_use: n.whenToUse || undefined,
         relations: n._out.map((e) => `${e.r}:${e.t}`),
@@ -207,6 +208,7 @@ function doBuild() {
       code: extractCode(body),
       refs: (fm.references || []).map((s) => { const [t, u] = String(s).split('|'); return { t, u }; }),
     };
+    if (fm.added) node.added = String(fm.added); // release tag for "what's new" highlighting
     if (!node.refs.length) delete node.refs;
     if (!node.code) delete node.code;
     if (!node.whenToUse) delete node.whenToUse;
@@ -242,6 +244,7 @@ function doBuild() {
 const CLUSTERS = ${JSON.stringify(CONFIG.CLUSTERS, null, 2)};
 const LEVELS = ${JSON.stringify(CONFIG.LEVELS, null, 2)};
 const RELATIONS = ${JSON.stringify(CONFIG.RELATIONS, null, 2)};
+const RELEASE = ${JSON.stringify(CONFIG.RELEASE, null, 2)};
 const GRAPH = ${JSON.stringify(GRAPH, null, 2)};
 `;
   fs.writeFileSync(DATA_JS, out);

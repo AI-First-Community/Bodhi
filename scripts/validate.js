@@ -20,8 +20,8 @@ const err = (m) => errors.push(m);
 const warn = (m) => warns.push(m);
 
 // ---- load generated runtime data ------------------------------------------
-const { CLUSTERS, RELATIONS, LEVELS, GRAPH } =
-  new Function(fs.readFileSync(DATA_JS, 'utf8') + '\n;return { CLUSTERS, RELATIONS, LEVELS, GRAPH };')();
+const { CLUSTERS, RELATIONS, LEVELS, RELEASE, GRAPH } =
+  new Function(fs.readFileSync(DATA_JS, 'utf8') + '\n;return { CLUSTERS, RELATIONS, LEVELS, RELEASE: typeof RELEASE !== "undefined" ? RELEASE : null, GRAPH };')();
 
 const nodes = GRAPH.nodes || [];
 const edges = GRAPH.edges || [];
@@ -38,6 +38,7 @@ for (const n of nodes) {
   else if (!CLUSTERS[n.cluster]) err(`${n.id}: unknown cluster "${n.cluster}"`);
   if (!(n.level in LEVELS)) err(`${n.id}: level ${n.level} not in 1..${Object.keys(LEVELS).length}`);
   if (!n.type) warn(`${n.id}: no OKF type carried through`);
+  if (n.added != null && !/^\d+\.\d+\.\d+$/.test(String(n.added))) warn(`${n.id}: "added" is not a semver version (${n.added})`);
   if (n.refs) n.refs.forEach((r) => { if (!r.u || !/^https?:\/\//.test(r.u)) warn(`${n.id}: ref "${r.t}" has a non-URL link`); });
 }
 
@@ -101,8 +102,10 @@ if (fs.existsSync(BUNDLE)) {
 
 // ---- report ----------------------------------------------------------------
 console.log(`\nLLM Bodhi — validation`);
+const newCount = RELEASE ? nodes.filter((n) => n.added === RELEASE.version).length : 0;
 console.log(`  concepts: ${nodes.length}  edges: ${edges.length}  clusters: ${Object.keys(CLUSTERS).length}  ` +
-            `comparisons: ${(GRAPH.comparisons || []).length}  bundle files: ${bundleIds.size}`);
+            `comparisons: ${(GRAPH.comparisons || []).length}  bundle files: ${bundleIds.size}` +
+            (RELEASE ? `  new in ${RELEASE.version}: ${newCount}` : ''));
 if (warns.length) { console.log(`\n⚠ ${warns.length} warning(s):`); warns.forEach((w) => console.log('  - ' + w)); }
 if (errors.length) { console.log(`\n✗ ${errors.length} error(s):`); errors.forEach((e) => console.log('  - ' + e)); }
 else console.log(`\n✓ no errors`);

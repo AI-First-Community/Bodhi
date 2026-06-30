@@ -183,9 +183,25 @@ button { font-family: inherit; }
 .level-chip:hover { border-color: var(--border-strong); color: var(--text); }
 .level-chip.active { background: var(--surface2); color: var(--text); border-color: var(--accent2); }
 .level-chip .num { font-weight: 800; color: var(--accent2); }
-.level-chip .lbl { display: none; margin-left: 5px; }
-/* show full level names only when there is ample room */
-@media (min-width: 1600px) { .level-chip .lbl { display: inline; } }
+/* level chips stay number-only (each has a descriptive tooltip) */
+.level-chip .lbl { display: none; }
+
+/* "New this release" filter chip */
+.new-chip {
+  flex: 0 0 auto; height: 30px; padding: 0 10px 0 9px; margin-left: 4px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, #4fe08a 45%, var(--border));
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; color: var(--text-soft); font-size: 12px; font-weight: 700;
+  cursor: pointer; user-select: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.new-chip .spark { color: #4fe08a; font-size: 12px; }
+.new-chip .new-count { font-size: 10px; font-weight: 800; color: #06250f; background: #4fe08a; border-radius: 999px; padding: 1px 6px; min-width: 18px; text-align: center; }
+.new-chip:hover { border-color: #4fe08a; color: var(--text); }
+.new-chip.active { background: color-mix(in srgb, #4fe08a 16%, transparent); border-color: #4fe08a; color: var(--text); box-shadow: 0 0 0 3px color-mix(in srgb, #4fe08a 18%, transparent); }
+
+/* "New in vX" badge inside the detail panel tag */
+.new-badge { font-size: 9px; font-weight: 800; letter-spacing: 0.4px; color: #06250f; background: #4fe08a; border-radius: 999px; padding: 2px 7px; text-transform: none; }
 
 /* ---- Instant tooltips (any element with [data-tip]) ----
    Appears immediately on hover/focus, below the element (good for the top bar). */
@@ -252,6 +268,12 @@ button { font-family: inherit; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 5px 6px; cursor: pointer; border-radius: 6px; color: var(--text-soft); transition: background 0.12s; }
 .legend-item:hover { background: var(--surface2); color: var(--text); }
 .legend-item .dot { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; }
+/* per-cluster show/hide toggle (the swatch) */
+.legend-toggle { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; padding: 3px; margin: -3px; background: none; border: 0; cursor: pointer; border-radius: 5px; }
+.legend-toggle:hover { background: var(--surface3); }
+.legend-item.off { opacity: 0.5; }
+.legend-item.off .li-label { text-decoration: line-through; }
+.legend-item .li-label { cursor: pointer; }
 .legend-item .li-label { flex: 1 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .legend-item .legend-count { flex: 0 0 auto; font-size: 10px; font-weight: 700; color: var(--muted); background: var(--surface2); border-radius: 999px; padding: 1px 7px; min-width: 22px; text-align: center; }
 .legend-item:hover .legend-count { background: var(--surface3); }

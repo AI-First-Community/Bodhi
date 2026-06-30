@@ -9,8 +9,14 @@
   const o = factory();
   if (typeof module === 'object' && module.exports) module.exports = o; // Node (build.js)
   else { root.CLUSTERS = o.CLUSTERS; root.RELATIONS = o.RELATIONS; root.LEVELS = o.LEVELS;
-         root.CLUSTER_TYPE = o.CLUSTER_TYPE; root.DECISION_TREE = o.DECISION_TREE; root.GUIDED_PATH = o.GUIDED_PATH; }
+         root.CLUSTER_TYPE = o.CLUSTER_TYPE; root.DECISION_TREE = o.DECISION_TREE; root.GUIDED_PATH = o.GUIDED_PATH;
+         root.RELEASE = o.RELEASE; }
 })(typeof self !== 'undefined' ? self : this, function () {
+
+  // Current release. Concepts whose frontmatter `added:` equals `version` are
+  // surfaced as "new" in the app. Bump on each release and tag new concepts with
+  // the new version to highlight what changed.
+  const RELEASE = { version: '0.4.0', label: 'v0.4.0' };
 
   const CLUSTERS = {
     foundations:  { label: 'Foundations',           color: '#3b82f6' },
@@ -248,5 +254,5 @@
     },
   ];
 
-  return { CLUSTERS, CLUSTER_TYPE, LEVELS, RELATIONS, DECISION_TREE, GUIDED_PATH, COMPARISONS };
+  return { CLUSTERS, CLUSTER_TYPE, LEVELS, RELATIONS, RELEASE, DECISION_TREE, GUIDED_PATH, COMPARISONS };
 });
