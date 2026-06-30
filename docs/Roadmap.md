@@ -1,6 +1,6 @@
 # Roadmap
 
-Bodhi Map is meant to be **kept current** — released in small, regular increments, each highlighting what's new (see [Release Process](Release-Process)). This page sketches the direction; nothing here is a promise, and contributions can reshuffle priorities.
+Bodhi Map is meant to be **kept current** — released in small, regular increments, each highlighting what's new (see [Release Process](Release-Process.md)). This page sketches the direction; nothing here is a promise, and contributions can reshuffle priorities.
 
 ## Guiding intent
 
@@ -22,4 +22,4 @@ Open an issue or PR on [GitHub](https://github.com/AI-First-Community/Bodhi):
 - Flag something out of date or incorrectly explained.
 - Suggest a feature.
 
-Accurate, well-sourced additions that wire cleanly into the existing graph are the most valuable contributions. See [Concept Authoring](Concept-Authoring) and [Contributing](Contributing).
+Accurate, well-sourced additions that wire cleanly into the existing graph are the most valuable contributions. See [Concept Authoring](Concept-Authoring.md) and [Contributing](Contributing.md).

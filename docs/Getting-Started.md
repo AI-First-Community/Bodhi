@@ -25,7 +25,7 @@ That's it. No server, no internet connection, no build step. The graph, fonts, a
 4. **Filter** by level (1–5) or by cluster (click a swatch in the legend dock) to pare the map down to what you care about.
 5. **Try the flows** — the **🧭 Which technique?** wizard recommends an adaptation strategy; **▶ Guided Path** walks a real workflow end to end.
 
-See the **[User Guide](User-Guide)** for everything in depth.
+See the **[User Guide](User-Guide.md)** for everything in depth.
 
 ## If you want to build / contribute
 
@@ -41,6 +41,6 @@ npm run export     # regenerate the knowledge/ bundle from js/data.js (rarely ne
 Requirements: **Node.js** (any recent LTS) for the build/validate scripts. The app itself needs only a browser.
 
 Next steps:
-- Adding or editing a concept → **[Concept Authoring](Concept-Authoring)**
-- The contribution workflow → **[Contributing](Contributing)**
-- How the build works → **[Architecture](Architecture)**
+- Adding or editing a concept → **[Concept Authoring](Concept-Authoring.md)**
+- The contribution workflow → **[Contributing](Contributing.md)**
+- How the build works → **[Architecture](Architecture.md)**

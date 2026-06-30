@@ -1,10 +1,12 @@
-# Bodhi Map 🍃 — Wiki
+# Bodhi Map 🍃 — Documentation
 
 *An open, interactive knowledge graph of modern AI.*
 
+> 📖 This is the project documentation. Browsing on GitHub? Every page below is a markdown file in this `docs/` folder.
+
 **Bodhi Map** turns the scattered landscape of modern AI — from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization — into a single navigable map. Every concept is a node; typed edges show how techniques **relate**, **improve on**, **combine with**, or **build on** each other. It runs **fully offline** in a browser with **zero dependencies** — just open `index.html`.
 
-> New here? Jump to **[Getting Started](Getting-Started)** to run it, or the **[User Guide](User-Guide)** to learn what it can do.
+> New here? Jump to **[Getting Started](Getting-Started.md)** to run it, or the **[User Guide](User-Guide.md)** to learn what it can do.
 
 ---
 
@@ -32,7 +34,7 @@ Modern AI moves faster than anyone can read, and the knowledge that matters is r
 
 ## How the project is organized
 
-`knowledge/` is the **source of truth** — an OKF bundle of one markdown file per concept. A tiny zero-dependency build compiles it into `js/data.js`, which the browser app renders. See **[Architecture](Architecture)** for the full pipeline.
+`knowledge/` is the **source of truth** — an OKF bundle of one markdown file per concept. A tiny zero-dependency build compiles it into `js/data.js`, which the browser app renders. See **[Architecture](Architecture.md)** for the full pipeline.
 
 ```
 knowledge/      ← OKF bundle (SOURCE OF TRUTH — edit here)
@@ -43,17 +45,19 @@ js/graph.js     ← the app (Cytoscape.js, vendored offline)
 index.html      ← app shell · landing.html ← landing page
 ```
 
-## Wiki map
+## Documentation map
 
-- **[Getting Started](Getting-Started)** — run it in 30 seconds.
-- **[User Guide](User-Guide)** — graph navigation, search, level & cluster filters, the *New* highlight, the decision wizard, guided path, compare tables, export-for-agents, themes, deep links, keyboard shortcuts.
-- **[Concept Authoring](Concept-Authoring)** — add or edit a concept (the most common contribution): the frontmatter schema, relation verbs, levels, sources, and marking something new.
-- **[Configuration Reference](Configuration-Reference)** — extend the controlled vocabulary and interactive flows in `okf.config.js`.
-- **[Architecture](Architecture)** — how the bundle → build → runtime pipeline works, and why it's offline.
-- **[Contributing](Contributing)** — the full fork → PR workflow and quality bar.
-- **[Release Process](Release-Process)** — how to cut a versioned release and highlight what's new.
-- **[FAQ](FAQ)** — quick answers.
+- **[Getting Started](Getting-Started.md)** — run it in 30 seconds.
+- **[User Guide](User-Guide.md)** — graph navigation, search, level & cluster filters, the *New* highlight, the decision wizard, guided path, compare tables, export-for-agents, themes, deep links, keyboard shortcuts.
+- **[Concept Authoring](Concept-Authoring.md)** — add or edit a concept (the most common contribution): the frontmatter schema, relation verbs, levels, sources, and marking something new.
+- **[Configuration Reference](Configuration-Reference.md)** — extend the controlled vocabulary and interactive flows in `okf.config.js`.
+- **[Architecture](Architecture.md)** — how the bundle → build → runtime pipeline works, and why it's offline.
+- **[Contributing](Contributing.md)** — the full fork → PR workflow and quality bar.
+- **[Release Process](Release-Process.md)** — how to cut a versioned release and highlight what's new.
+- **[Roadmap](Roadmap.md)** — direction and candidate additions.
+- **[Changelog](Changelog.md)** — notable changes per release.
+- **[FAQ](FAQ.md)** — quick answers.
 
 ## Contributing in one line
 
-Adding a concept is just writing a markdown file in `knowledge/` and running `npm run build` (which validates). Start with **[Concept Authoring](Concept-Authoring)**.
+Adding a concept is just writing a markdown file in `knowledge/` and running `npm run build` (which validates). Start with **[Concept Authoring](Concept-Authoring.md)**.

@@ -30,7 +30,7 @@ Browsers can't `fetch()` local markdown over `file://`, so the app can't read `k
 | File | Role |
 |---|---|
 | `knowledge/` | OKF v0.1 bundle — one markdown file per concept, grouped by cluster. `index.md` files are reserved listings. **Edit here.** |
-| `okf.config.js` | Controlled vocabulary + interactive flows. See [Configuration Reference](Configuration-Reference). |
+| `okf.config.js` | Controlled vocabulary + interactive flows. See [Configuration Reference](Configuration-Reference.md). |
 | `scripts/okf.js` | Build/export tooling. `build`: bundle + config → `js/data.js`. `export`: `js/data.js` → bundle (bootstrap only). |
 | `scripts/validate.js` | Integrity auditor; exits non-zero on errors so it can gate a build/commit. |
 | `js/data.js` | **Generated** runtime data. |

@@ -12,7 +12,7 @@ Because the highlight is keyed to the current version, bumping the version autom
 
 ## Checklist for a new release (e.g. 0.4.0 → 0.5.0)
 
-1. **Author the new/updated concepts** (see [Concept Authoring](Concept-Authoring)). On each genuinely new concept, set:
+1. **Author the new/updated concepts** (see [Concept Authoring](Concept-Authoring.md)). On each genuinely new concept, set:
    ```yaml
    added: "0.5.0"
    ```

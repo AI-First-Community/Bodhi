@@ -127,12 +127,21 @@ New clusters / relation types / wizard steps live in `okf.config.js`. The bundle
 | `js/graph.js` | Cytoscape rendering & interactions |
 | `js/cytoscape.min.js` + `fcose` deps | Vendored graph libraries (offline) |
 
+## Documentation
+
+Full docs live in [**`docs/`**](docs/) — a complete guide to using, authoring, and
+extending Bodhi Map:
+
+- [Getting Started](docs/Getting-Started.md) · [User Guide](docs/User-Guide.md) · [FAQ](docs/FAQ.md)
+- [Concept Authoring](docs/Concept-Authoring.md) · [Configuration Reference](docs/Configuration-Reference.md) · [Architecture](docs/Architecture.md)
+- [Contributing](docs/Contributing.md) · [Release Process](docs/Release-Process.md) · [Roadmap](docs/Roadmap.md) · [Changelog](docs/Changelog.md)
+
 ## Contributing
 
 Contributions — new concepts, corrections, better explanations — are welcome.
 Adding a concept is just writing a Markdown file in [`knowledge/`](knowledge/)
 and running `npm run build` (which validates). See [CONTRIBUTING.md](CONTRIBUTING.md)
-for the format and quality bar.
+and the [Concept Authoring](docs/Concept-Authoring.md) guide for the format and quality bar.
 
 ## Credits & sources
 

@@ -61,7 +61,7 @@ The current version marker that powers the **"what's new"** highlight.
 const RELEASE = { version: '0.4.0', label: 'v0.4.0' };
 ```
 
-Concepts whose frontmatter `added:` equals `RELEASE.version` are surfaced as new (green ring + **New** filter chip). On each release, bump this and tag the new concepts — see **[Release Process](Release-Process)**.
+Concepts whose frontmatter `added:` equals `RELEASE.version` are surfaced as new (green ring + **New** filter chip). On each release, bump this and tag the new concepts — see **[Release Process](Release-Process.md)**.
 
 ## DECISION_TREE (the "Which technique?" wizard)
 
@@ -116,4 +116,4 @@ Each row's `id` must be a real concept (clicking the row jumps to it). The valid
 
 ---
 
-After editing `okf.config.js`, always run `npm run build` and confirm `npm run validate` reports **0 errors**. See **[Architecture](Architecture)** for how this file flows into the runtime.
+After editing `okf.config.js`, always run `npm run build` and confirm `npm run validate` reports **0 errors**. See **[Architecture](Architecture.md)** for how this file flows into the runtime.

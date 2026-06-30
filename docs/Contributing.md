@@ -14,8 +14,8 @@ Contributions — new concepts, corrections, better explanations, features — a
    git checkout -b add-my-concept
    ```
 3. **Make your change.**
-   - Adding/editing a concept → follow **[Concept Authoring](Concept-Authoring)**.
-   - New cluster / relation / level / wizard step / comparison table → **[Configuration Reference](Configuration-Reference)**.
+   - Adding/editing a concept → follow **[Concept Authoring](Concept-Authoring.md)**.
+   - New cluster / relation / level / wizard step / comparison table → **[Configuration Reference](Configuration-Reference.md)**.
 4. **Build & validate** (this regenerates `js/data.js` and runs the integrity check):
    ```bash
    npm run build
@@ -52,4 +52,4 @@ Bodhi Map synthesizes publicly published research; credit for the underlying ide
 
 ## Cutting a release
 
-Maintainers: see **[Release Process](Release-Process)** for bumping the version and highlighting what's new.
+Maintainers: see **[Release Process](Release-Process.md)** for bumping the version and highlighting what's new.

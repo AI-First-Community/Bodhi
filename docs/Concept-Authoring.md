@@ -55,7 +55,7 @@ When to reach for it (mirrors the frontmatter field for OKF readers).
 | `description` | yes | One-line summary shown on the node and in the panel. Keep it tight. |
 | `cluster` | yes | A cluster id defined in `okf.config.js` (e.g. `peft`, `agents`). |
 | `level` | yes | Integer **1–5** (learning depth — see below). |
-| `added` | no | Semver version (e.g. `"0.4.0"`). When it equals the current `RELEASE.version`, the app marks the concept **new**. See [Release Process](Release-Process). |
+| `added` | no | Semver version (e.g. `"0.4.0"`). When it equals the current `RELEASE.version`, the app marks the concept **new**. See [Release Process](Release-Process.md). |
 | `when_to_use` | no | Practical guidance — when to choose this over alternatives. |
 | `relations` | no | List of `verb:target-id` typed edges (see below). |
 | `references` | no | List of `Title|https://url` source links. Cite at least one real source. |
@@ -113,6 +113,6 @@ The build prints concept/edge counts and (if any) warnings about unknown relatio
 - **Stay offline** — no CDNs, external fonts, scripts, or icons (icons are inline SVG; fonts are vendored). Quick check: `grep -rn 'http' index.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'` should be empty.
 - **Keep it balanced** — a clean, accurate graph matters more than raw size.
 
-Adding something that needs a **new cluster, relation type, level, wizard step, or comparison table**? Those live in `okf.config.js` — see the **[Configuration Reference](Configuration-Reference)**.
+Adding something that needs a **new cluster, relation type, level, wizard step, or comparison table**? Those live in `okf.config.js` — see the **[Configuration Reference](Configuration-Reference.md)**.
 
-Ready to open a PR? See **[Contributing](Contributing)**.
+Ready to open a PR? See **[Contributing](Contributing.md)**.
