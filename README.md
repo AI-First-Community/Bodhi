@@ -9,6 +9,31 @@ Fully **offline & self-contained** — no internet, no build step. Just open `in
 > Open source — contributions welcome. Concepts are plain markdown in [`knowledge/`](knowledge/) (see [Editing / extending](#editing--extending)).
 > Created by **Sanjeev** · *Innovate with Sanjeev*.
 
+## Why "Bodhi"? — motivation & philosophy
+
+**Bodhi** (बोधि) is a Sanskrit/Pali word for *awakening* — the moment scattered
+facts suddenly resolve into understanding. The 🍃 is a nod to the Bodhi tree, under
+which that insight is said to have dawned. The name is the goal: not to pile up
+information, but to help understanding *click*.
+
+The motivation is simple. Modern AI moves faster than anyone can read, and the
+knowledge that matters is real but **scattered** across hundreds of papers, blog
+posts, and docs. The hardest part isn't finding definitions — it's seeing the
+**connections**: how LoRA relates to full fine-tuning, when DPO beats PPO, where
+quantization fits in a pipeline. Newcomers drown in tabs; practitioners keep a
+messy map in their heads. Bodhi Map is an attempt to draw that map in the open.
+
+A few principles guide it:
+
+- **Understanding over hype** — every concept earns its place with a real source
+  and a plain-language *why* and *when to use*, not buzzwords.
+- **Connections are the content** — techniques are nodes; the typed edges
+  (`improves-on`, `alternative`, `combines`) are where the real insight lives.
+- **Open & offline by default** — no accounts, no CDNs, no telemetry. One folder,
+  open `index.html`, and it works on a plane.
+- **A path, not a pile** — clustered from foundations to the frontier so you can
+  walk from tokens to agents at your own pace.
+
 ## Run
 
 ```bash
@@ -18,14 +43,15 @@ open index.html          # macOS — opens in default browser
 
 ## Features
 
-- **Graph view** — ~67 concepts clustered by theme (Foundations · Architecture · Adaptation · PEFT · SFT · Alignment · Efficiency · Data/Eval), color-coded, with typed edges (`is-a`, `improves-on`, `alternative-to`, `requires`, `combines-with`, `builds-on`). Force-directed `fcose` layout with clean cluster separation.
+- **Graph view** — 123 concepts across 11 clusters (Foundations · Architecture · Model Archetypes · Adaptation Spectrum · PEFT · SFT/Instruction · Alignment/Preference · Reasoning & Test-Time · Agents & Retrieval · Efficiency & Infra · Data & Evaluation), color-coded, with typed edges (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`). Force-directed `fcose` layout with clean cluster separation.
 - **Click any node** → detail panel: plain-language summary, deeper detail, *when to use*, a code snippet, connections, and paper references.
 - **🧭 Which technique?** — an interactive decision wizard that asks a few questions and recommends the right rung of the adaptation ladder (RAG vs prompting vs LoRA/QLoRA vs full fine-tuning vs DPO/RLVR), then opens it in the graph.
 - **▶ Guided Path** — an animated walkthrough of a real workflow: base model → SFT → LoRA → DPO → eval → quantize.
 - **Compare** — side-by-side matrices for the technique families people most need to choose between: PEFT methods (LoRA · QLoRA · DoRA · AdaLoRA · Adapters · Prefix/Prompt/P-tuning · IA³ · BitFit) and Preference optimization (PPO · DPO · IPO · KTO · ORPO · SimPO · GRPO), across dimensions like trainable params, VRAM, mergeability, reward/reference-model needs, and pipeline. Click any technique to jump to it in the graph.
 - **⬇ For agents** — one click downloads the entire knowledge base as a single LLM-ready markdown context file (`llm-bodhi-knowledge.md`): every concept with its type, summary, detail, when-to-use, example, typed relations, and references. Drop it into an LLM/RAG pipeline as grounding context — the agent-ready payoff of the OKF backing.
 - **Light / dark theme** — toggle in the top-right (or press `t`); preference persists across sessions.
-- **Fuzzy search** (`f`) — ranked, typo-tolerant matching over names + summaries (e.g. "attn" → Attention), with `↑`/`↓`/`Enter` keyboard navigation. **Level filters** — focus from Foundations (1) to Advanced/Alignment (5). **Categorized legend dock** — clusters grouped by learning phase, collapsible, with concept counts; click to zoom.
+- **Fuzzy search** (`f`) — ranked, typo-tolerant matching over names + summaries (e.g. "attn" → Attention), with `↑`/`↓`/`Enter` keyboard navigation. **Level filters** — focus from Foundations (1) to Advanced/Alignment (5). **Cluster filters** — the legend dock doubles as a filter: click a swatch to show/hide that cluster (label still zooms), so you can pare the map down to your interest.
+- **✦ What's new** — concepts added in the current release are marked (`added:` in frontmatter, keyed to a `RELEASE` version), shown with a green ring on the graph and a **New** chip in the toolbar that filters to just the additions — so every release can highlight what changed.
 - **Shareable deep links** — the open concept or comparison is encoded in the URL hash (`#concept=lora`, `#compare=peft`), so any view can be bookmarked or shared and reopens exactly there.
 - **Responsive** — adapts to narrow screens; legend dock collapses on mobile.
 
@@ -108,6 +134,37 @@ Adding a concept is just writing a Markdown file in [`knowledge/`](knowledge/)
 and running `npm run build` (which validates). See [CONTRIBUTING.md](CONTRIBUTING.md)
 for the format and quality bar.
 
+## Credits & sources
+
+Bodhi Map stands on **publicly published research** — it does not originate the
+techniques it describes, and credit for the underlying ideas belongs to the
+respective authors and research teams. Every concept is grounded in its primary
+source: the original paper, official blog post, or documentation. Those citations
+live with the content, not buried in a footnote — each concept node shows its
+**References** in the detail panel, and the same links are in the OKF frontmatter
+under `knowledge/` (200+ source links in total).
+
+What Bodhi Map adds on top is its own contribution: the **curation, hands-on
+experience, and practical judgment** — how the pieces fit together, plain-language
+explanations, *when to use* guidance, the typed relationships between techniques,
+and the interactive experience (decision wizard, guided path, comparisons). The
+value is in the synthesis and the experience of navigating it, not in any single
+paper.
+
+If you spot a missing, wrong, or better source for any concept, please open an
+issue or PR — accurate attribution is part of the [quality bar](CONTRIBUTING.md#quality-bar).
+
+**Third-party software & assets** (all vendored locally so the app stays offline):
+
+| Component | Used for | License |
+|-----------|----------|---------|
+| [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) (Google Cloud) | Knowledge bundle format | Apache-2.0 |
+| [Cytoscape.js](https://js.cytoscape.org/) + [fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) layout | Graph rendering & layout | MIT |
+| [Manrope](https://github.com/sharanda/manrope) | UI typeface (`fonts/`) | SIL OFL 1.1 |
+
 ## License
 
 [MIT](LICENSE) © 2026 Sanjeev Azad — *Innovate with Sanjeev*. Use, fork, and build on it freely.
+
+The MIT license covers this project's own code and the curation/explanations. The
+referenced papers and sources remain the property of their respective authors.

@@ -18,8 +18,8 @@ editing Markdown. No framework, no build server, zero runtime dependencies.
 ## Quick start
 
 ```bash
-git clone <your-fork>
-cd "Bodhi Map"
+git clone https://github.com/<your-fork>/Bodhi.git
+cd Bodhi
 npm run build     # rebuilds js/data.js from knowledge/ and validates
 npm start         # opens index.html
 ```
@@ -64,6 +64,12 @@ There are **no dependencies to install** — `npm` is only used as a task runner
 must point at an existing concept `id` (the filename without `.md`). New
 clusters, relation types, levels, wizard steps, or comparison tables go in
 `okf.config.js`.
+
+**Marking a concept as new:** add `added: "<version>"` (e.g. `added: "0.4.0"`) to a
+concept's frontmatter. When it matches the `RELEASE.version` in `okf.config.js`,
+the app highlights it (green ring + the **New** filter chip). On each release, bump
+`RELEASE.version` and tag that release's additions — that's how "what's new" stays
+current.
 
 ## Quality bar
 

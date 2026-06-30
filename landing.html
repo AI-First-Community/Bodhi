@@ -15,6 +15,7 @@
       --green:#4fe08a; --green-deep:#1f9d57; --gold:#f3c969;
       --ink:#eaf3ee; --muted:#9fbcab;
       --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      --bi:88px; /* body indent = leaf width (76) + brandrow gap (12), aligns body text under the title's "B" */
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden}
@@ -29,7 +30,7 @@
     #spark{ position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
 
     /* emblem image (left) */
-    .emblem-wrap{ position:fixed; left:0; top:0; bottom:0; width:56%; z-index:2;
+    .emblem-wrap{ position:fixed; left:0; top:0; bottom:0; width:50%; z-index:2;
       display:flex; align-items:center; justify-content:center; padding:5vh 2vw; }
     .emblem{
       height:min(86vh,820px); width:auto; max-width:92%;
@@ -39,22 +40,31 @@
     }
 
     .panel{
-      position:fixed; z-index:3; top:0; right:6vw; bottom:0; width:min(46%,560px);
-      display:flex; flex-direction:column; justify-content:center; padding:6vh 2vw 6vh 0;
+      position:fixed; z-index:3; top:0; left:50%; right:0; bottom:0;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center; padding:6vh 4vw;
     }
-    .panel > *{ animation:rise 1s cubic-bezier(.2,.7,.2,1) both; }
+    .content{ display:flex; flex-direction:column; align-items:flex-start; text-align:left; max-width:100%; }
+    .content > *{ animation:rise 1s cubic-bezier(.2,.7,.2,1) both; }
     .brandrow{ display:flex; align-items:center; gap:12px; animation-delay:.05s; }
+    .titlestack{ display:inline-flex; flex-direction:column; align-items:stretch; }
     .brandrow .leaf{ filter:drop-shadow(0 4px 16px rgba(79,224,138,.45)); animation:breathe 7s ease-in-out 1s infinite; }
-    .brandrow .leaf svg{ width:66px; height:66px; color:var(--green); display:block; }
-    .brandrow h1{ font-size:clamp(52px,8vw,96px); font-weight:800; letter-spacing:-.02em; line-height:1;
-      background:linear-gradient(180deg,#ffffff,#bdeccf); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-      filter:drop-shadow(0 2px 22px rgba(79,224,138,.55)) drop-shadow(0 0 46px rgba(79,224,138,.3)); }
-    .tag{ font-size:11px; text-transform:uppercase; letter-spacing:4px; color:var(--green); font-weight:700; margin:14px 0 0; animation-delay:.13s; }
-    .lead{ font-size:clamp(15px,1.7vw,18px); line-height:1.7; color:var(--ink); margin-top:18px; max-width:430px; animation-delay:.2s; }
+    .brandrow .leaf svg{ width:76px; height:76px; color:var(--green); display:block; }
+    .brandrow h1{ font-size:clamp(60px,9vw,114px); font-weight:800; letter-spacing:-.02em; line-height:1;
+      background:
+        linear-gradient(125deg, transparent 16%, rgba(255,255,255,.95) 27%, transparent 38%, transparent 60%, rgba(127,240,170,.85) 71%, transparent 82%),
+        linear-gradient(180deg,#ffffff,#bdeccf);
+      background-size:240% 240%, 100% 100%; background-repeat:no-repeat; background-position:175% -75%, 0 0;
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 2px 22px rgba(79,224,138,.55)) drop-shadow(0 0 46px rgba(79,224,138,.3));
+      animation:shine 7s ease-in-out infinite; }
+    .tag{ font-size:clamp(15px,1.9vw,22px); text-transform:uppercase; letter-spacing:0; color:var(--green); font-weight:700; margin:16px 0 0; animation-delay:.13s;
+      width:95%; align-self:center; text-align:justify; text-align-last:justify; }
+    .lead{ font-size:clamp(15px,1.7vw,18px); line-height:1.7; color:var(--ink); margin:38px 0 0 var(--bi); max-width:430px; animation-delay:.2s; }
     .lead b{ color:#fff; font-weight:600; }
-    .sub2{ font-size:14px; line-height:1.7; color:var(--muted); margin-top:14px; max-width:430px; animation-delay:.27s; }
+    .sub2{ font-size:14px; line-height:1.7; color:var(--muted); margin:14px 0 0 var(--bi); max-width:430px; animation-delay:.27s; }
     .enter{
-      align-self:flex-start; display:inline-flex; align-items:center; gap:11px; margin-top:32px; text-decoration:none;
+      align-self:flex-start; margin-left:var(--bi); display:inline-flex; align-items:center; gap:11px; margin-top:32px; text-decoration:none;
       padding:14px 26px 14px 20px; border-radius:999px; font-weight:700; font-size:15.5px; color:#06250f;
       background:linear-gradient(180deg,var(--green),var(--green-deep));
       box-shadow:0 12px 34px rgba(79,224,138,.3), inset 0 1px 0 rgba(255,255,255,.3);
@@ -72,13 +82,15 @@
     @keyframes rise{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
     @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
     @keyframes breathe{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    @keyframes shine{ 0%{ background-position:175% -75%, 0 0; } 55%,100%{ background-position:-75% 175%, 0 0; } }
     @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
     @media (max-width:900px){
       .emblem-wrap{ width:100%; align-items:center; }
       .emblem{ height:auto; width:min(78vw,440px); opacity:.5; }
       .panel{ width:100%; left:0; right:0; align-items:center; text-align:center; padding:0 26px;
         background:linear-gradient(180deg, rgba(6,13,9,.35), rgba(6,13,9,.72) 55%); }
-      .lead,.sub2{ margin-left:auto; margin-right:auto; } .enter{ align-self:center; }
+      .content{ align-items:center; text-align:center; width:100%; }
+      .lead,.sub2{ margin-left:auto; margin-right:auto; } .enter{ align-self:center; margin-left:0; }
       footer{ left:0; right:0; text-align:center; }
     }
   </style>
@@ -92,6 +104,7 @@
 
   <!-- Branding panel (right) -->
   <main class="panel">
+    <div class="content">
     <div class="brandrow">
       <span class="leaf" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none">
@@ -103,15 +116,18 @@
           </g>
         </svg>
       </span>
-      <h1>Bodhi&nbsp;Map</h1>
+      <div class="titlestack">
+        <h1>Bodhi&nbsp;Map</h1>
+        <p class="tag" aria-label="awakening to AI">a w a k e n i n g &nbsp; t o &nbsp; a i</p>
+      </div>
     </div>
-    <p class="tag">awakening to AI</p>
     <p class="lead">A calm, living map of how modern AI fits together — <b>every idea a node, every connection an edge.</b></p>
     <p class="sub2">Knowledge grows from roots: ~120 concepts from a single token to reasoning models, fine-tuning, and agents. See the whole landscape at once, and find the path that's right for your problem.</p>
     <a class="enter" href="index.html">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
       Enter the map <span class="arrow">→</span>
     </a>
+    </div>
   </main>
 
   <footer>Open&nbsp;source · MIT &nbsp;·&nbsp; <a href="index.html"><b>Innovate with Sanjeev</b></a></footer>
