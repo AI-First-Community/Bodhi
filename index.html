@@ -163,7 +163,7 @@
   <footer>Open&nbsp;source · MIT · <a href="docs/">Docs</a> &nbsp;·&nbsp; <a href="app.html"><b>Innovate with Sanjeev</b></a></footer>
 
   <!-- Landing-only ambient music -->
-  <audio id="bgm" src="bodhi-background-music.mp3" loop preload="auto"></audio>
+  <audio id="bgm" src="bodhi-background-music.mp3" loop preload="none"></audio>
   <button id="bgmToggle" class="bgm-toggle" type="button" aria-label="Toggle background music" title="Music on / off"></button>
 
   <script>
@@ -196,8 +196,9 @@
   </script>
 
   <script>
-    // Landing-only ambient music: autoplay if allowed, else start on first
-    // interaction; a toggle lets the user mute (remembered). Stops on unload.
+    // Landing-only ambient music (optional): the mp3 loads lazily and starts
+    // on the first interaction; a toggle lets the user mute (remembered).
+    // Never blocks page load. Stops on unload (nav to app / tab close).
     (function () {
       var audio = document.getElementById('bgm'), btn = document.getElementById('bgmToggle');
       if (!audio || !btn) return;
@@ -215,8 +216,9 @@
         if (audio.paused) { userOff = false; try { localStorage.removeItem('bodhi-bgm'); } catch (e) {} tryPlay(); }
         else { userOff = true; try { localStorage.setItem('bodhi-bgm', 'off'); } catch (e) {} audio.pause(); render(); }
       });
+      // Don't fetch/play eagerly — the mp3 (optional) loads only on first
+      // interaction, so it never delays initial page load.
       if (!userOff) {
-        tryPlay();
         document.addEventListener('pointerdown', autostart);
         document.addEventListener('keydown', autostart);
         document.addEventListener('touchstart', autostart, { passive: true });
