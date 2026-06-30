@@ -1,3 +1,8 @@
+---
+title: Concept Authoring
+nav_order: 4
+---
+
 # Concept Authoring
 
 The most common contribution is **adding or improving a concept** — and that's just editing one Markdown file. No framework, no build server, zero runtime dependencies.

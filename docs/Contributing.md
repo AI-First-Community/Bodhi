@@ -1,3 +1,8 @@
+---
+title: Contributing
+nav_order: 7
+---
+
 # Contributing
 
 Contributions — new concepts, corrections, better explanations, features — are welcome. Most contributions are just **editing Markdown** in `knowledge/`.

@@ -1,3 +1,9 @@
+---
+title: Home
+nav_order: 1
+permalink: /docs/
+---
+
 # Bodhi Map 🍃 — Documentation
 
 *An open, interactive knowledge graph of modern AI.*

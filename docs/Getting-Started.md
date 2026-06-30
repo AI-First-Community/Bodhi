@@ -1,3 +1,8 @@
+---
+title: Getting Started
+nav_order: 2
+---
+
 # Getting Started
 
 Bodhi Map is a static, offline web app with **zero runtime dependencies**. There is nothing to install to *use* it.

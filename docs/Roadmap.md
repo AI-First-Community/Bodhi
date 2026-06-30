@@ -1,3 +1,8 @@
+---
+title: Roadmap
+nav_order: 9
+---
+
 # Roadmap
 
 Bodhi Map is meant to be **kept current** — released in small, regular increments, each highlighting what's new (see [Release Process](Release-Process.md)). This page sketches the direction; nothing here is a promise, and contributions can reshuffle priorities.

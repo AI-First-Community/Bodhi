@@ -1,0 +1,51 @@
+# GitHub Pages config — the app is served as-is at the site root (/Bodhi/),
+# and the docs/ folder is themed into a wiki-like site at /Bodhi/docs/.
+# Pinned to just-the-docs v0.3.3 (compatible with GitHub Pages' Jekyll 3.9).
+title: Bodhi Map
+description: An open, interactive knowledge graph of modern AI.
+url: https://ai-first-community.github.io
+baseurl: /Bodhi
+
+remote_theme: just-the-docs/just-the-docs@v0.3.3
+plugins:
+  - jekyll-remote-theme
+
+# just-the-docs options
+search_enabled: true
+heading_anchors: true
+aux_links:
+  "Open the map ↗":
+    - "/Bodhi/app.html"
+  "GitHub ↗":
+    - "https://github.com/AI-First-Community/Bodhi"
+aux_links_new_tab: true
+back_to_top: true
+back_to_top_text: "Back to top"
+
+# Theme only the docs/ pages (so I only need title/nav_order in their front matter)
+defaults:
+  - scope:
+      path: "docs"
+    values:
+      layout: default
+
+# Keep the app, the knowledge bundle, and repo internals out of the generated site.
+# (Files listed here are not processed/copied by Jekyll; the app's index.html,
+#  app.html, js/, css/, fonts/, images/ are NOT excluded, so they ship as-is.)
+exclude:
+  - knowledge/
+  - scripts/
+  - node_modules/
+  - okf.config.js
+  - "*.config.js"
+  - package.json
+  - package-lock.json
+  - README.md
+  - CONTRIBUTING.md
+  - LICENSE
+  - flyer.html
+  - flyer.pdf
+  - landing-lotus.html
+  - Gemfile
+  - Gemfile.lock
+  - vendor/

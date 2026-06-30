@@ -1,3 +1,8 @@
+---
+title: Configuration Reference
+nav_order: 5
+---
+
 # Configuration Reference
 
 `okf.config.js` is the **single source of truth for everything that is not a concept** — the controlled vocabulary (clusters, levels, relations), the release marker, and the interactive flows (decision wizard, guided path, comparison tables). The build inlines it into `js/data.js`, so after any change run `npm run build`.

@@ -1,3 +1,8 @@
+---
+title: User Guide
+nav_order: 3
+---
+
 # User Guide
 
 Everything the Bodhi Map app can do. Open `app.html` (the interactive map — or click *Enter the map* from the `index.html` landing) and follow along.

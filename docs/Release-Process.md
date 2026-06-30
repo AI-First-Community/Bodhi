@@ -1,3 +1,8 @@
+---
+title: Release Process
+nav_order: 8
+---
+
 # Release Process
 
 Bodhi Map is meant to be **kept current** — every release can highlight what's new so returning users immediately see the additions. This page is the maintainer checklist.

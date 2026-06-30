@@ -1,3 +1,8 @@
+---
+title: Architecture
+nav_order: 6
+---
+
 # Architecture
 
 Bodhi Map is intentionally tiny: a markdown knowledge bundle, a zero-dependency build that compiles it to a single JS file, and a browser app that renders it. No server, no framework, no internet.

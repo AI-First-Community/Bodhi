@@ -1,3 +1,8 @@
+---
+title: FAQ
+nav_order: 11
+---
+
 # FAQ
 
 **What is Bodhi Map?**

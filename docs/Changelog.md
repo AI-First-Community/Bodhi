@@ -1,3 +1,8 @@
+---
+title: Changelog
+nav_order: 10
+---
+
 # Changelog
 
 Notable changes per release. The in-app **New** chip always reflects the current release's additions (see [Release Process](Release-Process.md)).
