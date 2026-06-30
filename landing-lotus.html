@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bodhi Map — awakening to AI</title>
+  <style>
+    @font-face { font-family:'Manrope'; font-weight:400; font-display:swap; src:url('fonts/manrope-400.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:500; font-display:swap; src:url('fonts/manrope-500.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:600; font-display:swap; src:url('fonts/manrope-600.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:700; font-display:swap; src:url('fonts/manrope-700.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:800; font-display:swap; src:url('fonts/manrope-800.woff2') format('woff2'); }
+
+    :root{
+      --gold:#f3c969; --gold-soft:#ffe6a8; --green:#4fe08a;
+      --ink:#f6ecd8; --muted:#c6ab82;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{ font-family:var(--sans); color:var(--ink); background:#0a0703;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; letter-spacing:-.01em; }
+
+    .scene{ position:fixed; inset:0; z-index:0; }
+    .art{ position:absolute; inset:0; width:100%; height:100%; }
+    #spark{ position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+
+    .aura{ animation:glow 8s ease-in-out infinite; transform-origin:460px 520px; }
+    @keyframes glow{0%,100%{opacity:.9}50%{opacity:1}}
+    .halo-arc{ animation:rise 1.6s ease both .2s; }
+    .lotus{ animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both .1s; }
+    .figure{ animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both .35s; }
+
+    .panel{
+      position:fixed; z-index:3; top:0; right:0; bottom:0; width:min(44%,540px);
+      display:flex; flex-direction:column; justify-content:center; padding:6vh 5vw 6vh 3vw;
+    }
+    .panel > *{ animation:rise 1s cubic-bezier(.2,.7,.2,1) both; }
+    .brandrow{ display:flex; align-items:center; gap:12px; animation-delay:.05s; }
+    .brandrow .leaf{ filter:drop-shadow(0 4px 16px rgba(79,224,138,.45)); animation:breathe 7s ease-in-out 1s infinite; }
+    .brandrow .leaf svg{ width:44px; height:44px; color:var(--green); display:block; }
+    .brandrow h1{ font-size:clamp(30px,4.4vw,46px); font-weight:800; letter-spacing:-.02em; line-height:1;
+      background:linear-gradient(180deg,#fff,#ffe3ab); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .tag{ font-size:11px; text-transform:uppercase; letter-spacing:4px; color:var(--gold); font-weight:700; margin:14px 0 0; animation-delay:.13s; }
+    .lead{ font-size:clamp(15px,1.7vw,18px); line-height:1.7; color:var(--ink); margin-top:18px; max-width:430px; animation-delay:.2s; }
+    .lead b{ color:#fff; font-weight:600; }
+    .sub2{ font-size:14px; line-height:1.7; color:var(--muted); margin-top:14px; max-width:430px; animation-delay:.27s; }
+    .enter{
+      align-self:flex-start; display:inline-flex; align-items:center; gap:11px; margin-top:32px; text-decoration:none;
+      padding:14px 26px 14px 20px; border-radius:999px; font-weight:700; font-size:15.5px; color:#3a2400;
+      background:linear-gradient(180deg,var(--gold-soft),var(--gold));
+      box-shadow:0 12px 34px rgba(243,201,105,.3), inset 0 1px 0 rgba(255,255,255,.45);
+      transition:transform .2s, box-shadow .2s; animation-delay:.36s;
+    }
+    .enter:hover{ transform:translateY(-2px); box-shadow:0 18px 44px rgba(243,201,105,.46), inset 0 1px 0 rgba(255,255,255,.55); }
+    .enter svg{ width:20px; height:20px; }
+    .enter .arrow{ transition:transform .2s; font-weight:800; }
+    .enter:hover .arrow{ transform:translateX(4px); }
+
+    footer{ position:fixed; z-index:3; left:24px; bottom:20px; font-size:11.5px; color:rgba(198,171,130,.7); animation:rise 1.3s both .7s; }
+    footer b{ color:var(--gold); font-weight:700; }
+    footer a{ color:inherit; text-decoration:none; }
+
+    @keyframes rise{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
+    @keyframes breathe{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
+    @media (max-width:860px){
+      .panel{ width:100%; left:0; right:0; align-items:center; text-align:center; padding:0 26px;
+        background:linear-gradient(180deg, transparent, rgba(10,7,3,.6) 50%); }
+      .lead,.sub2{ margin-left:auto; margin-right:auto; } .enter{ align-self:center; }
+      footer{ left:0; right:0; text-align:center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <svg class="art" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <radialGradient id="bg" cx="0.34" cy="0.5" r="0.7">
+          <stop offset="0" stop-color="#2a1a09"/><stop offset="0.5" stop-color="#160d05"/><stop offset="1" stop-color="#070502"/>
+        </radialGradient>
+        <radialGradient id="aura" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#ffdf9e" stop-opacity="0.55"/>
+          <stop offset="0.45" stop-color="#e7a945" stop-opacity="0.22"/>
+          <stop offset="1" stop-color="#e7a945" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#fff6e0" stop-opacity="0.95"/><stop offset="1" stop-color="#fff6e0" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="petalFront" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#e9b56a"/><stop offset="0.5" stop-color="#fbe6bd"/><stop offset="1" stop-color="#fff7ea"/>
+        </linearGradient>
+        <linearGradient id="petalBack" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#c98e3e"/><stop offset="1" stop-color="#f3cd8c"/>
+        </linearGradient>
+        <linearGradient id="figG" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#2c1808"/><stop offset="0.6" stop-color="#7a5018"/><stop offset="1" stop-color="#caa052"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#1c1207"/><stop offset="1" stop-color="#0a0703"/>
+        </linearGradient>
+        <path id="petal" d="M0 0 C -22 -42 -15 -112 0 -154 C 15 -112 22 -42 0 0 Z"/>
+      </defs>
+
+      <rect width="1440" height="900" fill="url(#bg)"/>
+      <ellipse class="aura" cx="460" cy="500" rx="470" ry="430" fill="url(#aura)"/>
+
+      <!-- halo arc of blossoms + sparkle stars -->
+      <g class="halo-arc">
+        <path d="M170 560 A 300 300 0 0 1 760 540" fill="none" stroke="#f6d693" stroke-width="2" opacity="0.5"/>
+        <g fill="#ffe9b8">
+          <g opacity="0.9"><circle cx="250" cy="330" r="5"/><circle cx="262" cy="322" r="4"/><circle cx="240" cy="322" r="4"/><circle cx="252" cy="312" r="4"/><circle cx="260" cy="336" r="4"/></g>
+          <g opacity="0.85"><circle cx="360" cy="262" r="5"/><circle cx="372" cy="255" r="4"/><circle cx="350" cy="255" r="4"/><circle cx="361" cy="246" r="4"/></g>
+          <g opacity="0.85"><circle cx="500" cy="238" r="5"/><circle cx="512" cy="232" r="4"/><circle cx="490" cy="232" r="4"/><circle cx="501" cy="224" r="4"/><circle cx="510" cy="246" r="4"/></g>
+          <g opacity="0.8"><circle cx="630" cy="270" r="5"/><circle cx="642" cy="263" r="4"/><circle cx="620" cy="263" r="4"/><circle cx="631" cy="255" r="4"/></g>
+          <g opacity="0.75"><circle cx="724" cy="356" r="5"/><circle cx="735" cy="349" r="4"/><circle cx="714" cy="349" r="4"/></g>
+        </g>
+        <g fill="#fff4d6">
+          <circle cx="300" cy="300" r="1.6"/><circle cx="430" cy="240" r="1.8"/><circle cx="566" cy="232" r="1.6"/>
+          <circle cx="690" cy="300" r="1.8"/><circle cx="210" cy="400" r="1.6"/><circle cx="752" cy="430" r="1.6"/>
+        </g>
+      </g>
+
+      <!-- reflection (faded, below waterline) -->
+      <g transform="translate(0 1182) scale(1 -1)" opacity="0.16">
+        <g transform="translate(460 560)">
+          <use href="#petal" transform="rotate(-66) scale(1.05)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(-22) scale(1.05)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(22) scale(1.05)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(66) scale(1.05)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(-34) scale(.82)" fill="url(#petalFront)"/>
+          <use href="#petal" transform="rotate(0) scale(.82)" fill="url(#petalFront)"/>
+          <use href="#petal" transform="rotate(34) scale(.82)" fill="url(#petalFront)"/>
+        </g>
+      </g>
+
+      <!-- THE LOTUS + BUDDHA -->
+      <g class="lotus">
+        <!-- glow behind -->
+        <circle cx="460" cy="540" r="150" fill="url(#core)" opacity="0.5"/>
+        <!-- back petals + wide outer petals -->
+        <g transform="translate(460 560)">
+          <use href="#petal" transform="rotate(-104) scale(1.04)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(104) scale(1.04)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(-68) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(-45) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(-23) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(0) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(23) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(45) scale(1.06)" fill="url(#petalBack)"/>
+          <use href="#petal" transform="rotate(68) scale(1.06)" fill="url(#petalBack)"/>
+        </g>
+      </g>
+
+      <!-- Buddha in meditation (stylized gold silhouette), seated within the lotus -->
+      <g class="figure" transform="translate(460 548) scale(0.82)">
+        <circle cx="0" cy="-44" r="64" fill="url(#core)" opacity="0.45"/>
+        <circle cx="0" cy="-44" r="52" fill="none" stroke="#ffe7b0" stroke-width="2" opacity="0.6"/>
+        <g fill="url(#figG)">
+          <!-- crossed-legs base + knees -->
+          <path d="M-118 120 C -118 92 -78 80 0 80 C 78 80 118 92 118 120 C 118 138 70 148 0 148 C -70 148 -118 138 -118 120 Z"/>
+          <ellipse cx="-96" cy="112" rx="24" ry="16"/><ellipse cx="96" cy="112" rx="24" ry="16"/>
+          <!-- torso + rounded shoulders + arms -->
+          <path d="M-56 92 C -74 58 -68 32 -48 26 C -33 20 -16 16 0 16 C 16 16 33 20 48 26 C 68 32 74 58 56 92 Z"/>
+          <!-- hands cupped in lap (dhyana mudra) -->
+          <ellipse cx="0" cy="86" rx="40" ry="14"/><ellipse cx="0" cy="77" rx="21" ry="9"/><ellipse cx="0" cy="71" rx="8" ry="6"/>
+          <!-- neck -->
+          <rect x="-10" y="-12" width="20" height="30" rx="9"/>
+          <!-- head -->
+          <circle cx="0" cy="-44" r="29"/>
+          <!-- ushnisha (cranial crown bump) -->
+          <ellipse cx="0" cy="-70" rx="12" ry="15"/><circle cx="0" cy="-86" r="5"/>
+          <!-- elongated earlobes -->
+          <ellipse cx="-28" cy="-40" rx="6" ry="15"/><ellipse cx="28" cy="-40" rx="6" ry="15"/>
+        </g>
+        <!-- warm rim-light highlights -->
+        <g fill="none" stroke="#ffe6b4" stroke-linecap="round">
+          <path d="M22 -66 C 40 -56 42 -24 26 -14" stroke-width="2.2" opacity="0.45"/>
+          <path d="M44 28 C 64 48 68 72 56 92" stroke-width="2" opacity="0.3"/>
+          <path d="M-44 28 C -64 48 -68 72 -56 92" stroke-width="2" opacity="0.16"/>
+        </g>
+      </g>
+
+      <!-- front lotus petals (overlap the figure's lap) -->
+      <g class="lotus" transform="translate(460 560)">
+        <use href="#petal" transform="rotate(-56) scale(.84)" fill="url(#petalFront)"/>
+        <use href="#petal" transform="rotate(-34) scale(.84)" fill="url(#petalFront)"/>
+        <use href="#petal" transform="rotate(-11) scale(.84)" fill="url(#petalFront)"/>
+        <use href="#petal" transform="rotate(11) scale(.84)" fill="url(#petalFront)"/>
+        <use href="#petal" transform="rotate(34) scale(.84)" fill="url(#petalFront)"/>
+        <use href="#petal" transform="rotate(56) scale(.84)" fill="url(#petalFront)"/>
+        <ellipse cx="0" cy="-6" rx="44" ry="16" fill="url(#core)" opacity="0.5"/>
+      </g>
+
+      <!-- waterline -->
+      <rect x="0" y="600" width="1440" height="300" fill="url(#water)" opacity="0.5"/>
+      <path d="M120 612 q340 -16 680 0 t640 6" stroke="#caa052" stroke-width="1.5" fill="none" opacity="0.25"/>
+    </svg>
+
+    <canvas id="spark"></canvas>
+  </div>
+
+  <!-- Branding panel (right) -->
+  <main class="panel">
+    <div class="brandrow">
+      <span class="leaf" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/>
+          <path d="M12 6.2V2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <g stroke="#06351f" stroke-opacity=".5" stroke-width=".9" stroke-linecap="round">
+            <path d="M12 7.3V20"/><path d="M12 10.1 8.9 8.3"/><path d="M12 10.1 15.1 8.3"/>
+            <path d="M12 12.9 8.6 11.3"/><path d="M12 12.9 15.4 11.3"/><path d="M12 15.6 9.2 14.5"/><path d="M12 15.6 14.8 14.5"/>
+          </g>
+        </svg>
+      </span>
+      <h1>Bodhi&nbsp;Map</h1>
+    </div>
+    <p class="tag">awakening to AI</p>
+    <p class="lead">A calm, living map of how modern AI fits together — <b>every idea a node, every connection an edge.</b></p>
+    <p class="sub2">~120 concepts from a single token to reasoning models, fine-tuning, and agents. See the whole landscape at once, and find the path that's right for your problem.</p>
+    <a class="enter" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
+      Enter the map <span class="arrow">→</span>
+    </a>
+  </main>
+
+  <footer>Open&nbsp;source · MIT &nbsp;·&nbsp; <a href="index.html"><b>Innovate with Sanjeev</b></a></footer>
+
+  <script>
+    (function () {
+      var c = document.getElementById('spark'), x = c.getContext('2d');
+      var DPR = Math.min(window.devicePixelRatio || 1, 2), W, H, parts;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function rnd(a, b){ return a + Math.random() * (b - a); }
+      function size(){ W = c.width = innerWidth * DPR; H = c.height = innerHeight * DPR; }
+      function make(){ return { x: rnd(0, W), y: rnd(0, H), r: rnd(.6, 2.2) * DPR, vy: -rnd(.05, .35) * DPR,
+        vx: rnd(-.1, .1) * DPR, ph: rnd(0, 6.28), tw: rnd(.6, 1.8), star: Math.random() < 0.12 }; }
+      function init(){ size(); var n = Math.max(40, Math.min(110, Math.floor(innerWidth / 14))); parts = []; for (var i=0;i<n;i++) parts.push(make()); }
+      function dot(p, a){
+        x.globalAlpha = a; x.fillStyle = '#ffe7ad';
+        if (p.star){
+          x.save(); x.translate(p.x, p.y); var s = p.r * 2.6;
+          x.beginPath(); x.moveTo(0,-s); x.lineTo(s*.22,-s*.22); x.lineTo(s,0); x.lineTo(s*.22,s*.22);
+          x.lineTo(0,s); x.lineTo(-s*.22,s*.22); x.lineTo(-s,0); x.lineTo(-s*.22,-s*.22); x.closePath(); x.fill(); x.restore();
+        } else { x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.2832); x.fill(); }
+      }
+      var t = 0;
+      function frame(){
+        x.clearRect(0,0,W,H); t += 0.016;
+        for (var i=0;i<parts.length;i++){
+          var p = parts[i]; p.y += p.vy; p.x += p.vx;
+          if (p.y < -10) { parts[i] = make(); parts[i].y = H + 10; }
+          dot(p, (0.35 + 0.45 * (0.5 + 0.5 * Math.sin(t * p.tw + p.ph))));
+        }
+        requestAnimationFrame(frame);
+      }
+      init();
+      if (reduce){ for (var i=0;i<parts.length;i++) dot(parts[i], .7); } else frame();
+      window.addEventListener('resize', init);
+    })();
+  </script>
+</body>
+</html>

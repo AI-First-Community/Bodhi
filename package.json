@@ -1,0 +1,15 @@
+{
+  "name": "bodhi-map",
+  "version": "0.3.0",
+  "description": "Bodhi Map — an open, interactive knowledge graph of modern AI, backed by an Open Knowledge Format (OKF) bundle.",
+  "author": "Sanjeev Azad",
+  "license": "MIT",
+  "homepage": "",
+  "scripts": {
+    "build": "node scripts/okf.js build && node scripts/validate.js",
+    "validate": "node scripts/validate.js",
+    "export": "node scripts/okf.js export",
+    "start": "open index.html",
+    "test:ui": "node scripts/ui-test.js"
+  }
+}

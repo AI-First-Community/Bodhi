@@ -1,0 +1,22 @@
+# Efficiency & Infra
+
+- [AWQ](./awq.md) — Activation-aware quantization — protect the ~1% salient weights to preserve accuracy at 4-bit.
+- [bitsandbytes (NF4/INT8)](./bitsandbytes.md) — The library providing 8-bit optimizers and 4-bit NF4 quantization used by QLoRA.
+- [FP4 Microscaling (MXFP4 / NVFP4)](./mxfp4.md) — 4-bit floating point with block-shared scales — native on Blackwell, used both for inference and increasingly for training.
+- [FP8 Training & Inference](./fp8-training.md) — 8-bit floating point (E4M3/E5M2) — the default production precision on Hopper/Blackwell, validated for training at 600B+ scale.
+- [GaLore (Gradient Low-Rank Projection)](./galore.md) — Project gradients/optimizer state into a periodically-recomputed low-rank subspace — memory-efficient *full-parameter* training, not an adapter.
+- [GPTQ](./gptq.md) — One-shot PTQ to 3–4 bit using second-order (Hessian) info to minimize error.
+- [Gradient Checkpointing](./gradient-checkpointing.md) — Trade compute for memory: recompute activations in the backward pass instead of storing them.
+- [Knowledge Distillation](./distillation.md) — Train a small "student" to mimic a large "teacher" — compress capability into a cheaper model.
+- [Mixed Precision (bf16/fp16)](./mixed-precision.md) — Train in 16-bit to halve memory and double throughput, with key ops kept in fp32.
+- [Quantization](./quantization.md) — Store/compute weights in fewer bits (8/4/even 2-bit) to cut memory and speed up inference.
+- [Continuous Batching](./continuous-batching.md) — Iteration-level scheduling that adds/removes requests from the running batch each decode step — 2–3× throughput vs. static batching.
+- [FlashAttention](./flash-attention.md) — IO-aware exact attention kernel — fewer memory reads/writes, big speed & memory wins.
+- [FSDP / DeepSpeed ZeRO](./fsdp-deepspeed.md) — Shard params, gradients, and optimizer state across GPUs to train models bigger than one GPU.
+- [Model Merging](./model-merging.md) — Combine multiple fine-tuned models/adapters into one — no extra training (SLERP, TIES, DARE).
+- [Multi-Token Prediction (MTP)](./multi-token-prediction.md) — Train auxiliary heads to predict several future tokens at once — better sample efficiency and built-in self-speculation at decode time.
+- [PagedAttention](./paged-attention.md) — Allocate the KV cache in non-contiguous blocks (OS-style virtual paging) to eliminate fragmentation and enable continuous batching.
+- [Prefix Caching](./prefix-caching.md) — Cache and reuse the KV states of shared prefixes (system prompts, few-shot examples, RAG context) so they are not recomputed per request.
+- [Self-Speculative Decoding (EAGLE / MTP)](./eagle-speculative.md) — Draft tokens from the model's own features or trained multi-token-prediction heads, not a separate draft model — the production speculative-decoding default.
+- [Speculative Decoding](./speculative-decoding.md) — A small draft model proposes several tokens; the big model verifies them in one pass — faster, identical output.
+- [Tensor Parallelism](./tensor-parallelism.md) — Split individual weight matrices across GPUs (column/row partitions with all-reduce) to run models larger than one GPU.

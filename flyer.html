@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bodhi Map — one-page flyer</title>
+  <style>
+    @font-face { font-family:'Manrope'; font-weight:400; font-display:swap; src:url('fonts/manrope-400.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:500; font-display:swap; src:url('fonts/manrope-500.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:600; font-display:swap; src:url('fonts/manrope-600.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:700; font-display:swap; src:url('fonts/manrope-700.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:800; font-display:swap; src:url('fonts/manrope-800.woff2') format('woff2'); }
+
+    :root{
+      --green:#1f9d57; --green-br:#4fe08a; --gold:#c98a2a; --gold-br:#f3c969;
+      --ink:#10231a; --muted:#5d756a; --line:#e4ece7; --bg:#ffffff;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{ background:#eef2ef; font-family:var(--sans); color:var(--ink); -webkit-font-smoothing:antialiased; letter-spacing:-.01em; }
+
+    .sheet{
+      width:210mm; min-height:297mm; margin:18px auto; background:var(--bg);
+      box-shadow:0 18px 60px rgba(20,40,30,.16); position:relative; overflow:hidden;
+      display:flex; flex-direction:column;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .sheet::before{ content:""; position:absolute; inset:0 0 auto 0; height:7mm;
+      background:linear-gradient(90deg,var(--green),var(--green-br) 60%,var(--gold-br)); }
+
+    /* header */
+    .head{ display:flex; align-items:center; gap:16px; padding:11mm 16mm 0; }
+    .leaf svg{ width:50px; height:50px; color:var(--green); display:block; filter:drop-shadow(0 2px 6px rgba(31,157,87,.3)); }
+    .head .leaf{ position:relative; }
+    .head .leaf::before{ content:""; position:absolute; left:50%; top:50%; width:74px; height:74px; transform:translate(-50%,-50%);
+      border-radius:50%; background:radial-gradient(circle, rgba(79,224,138,.5), rgba(79,224,138,0) 68%); z-index:0; }
+    .head .leaf svg{ position:relative; z-index:1; filter:drop-shadow(0 0 9px rgba(79,224,138,.8)) drop-shadow(0 0 20px rgba(79,224,138,.45)); }
+    .brand h1{ font-size:42px; font-weight:800; line-height:1; letter-spacing:-.025em; }
+    .brand .tag{ font-size:11.5px; letter-spacing:3.5px; text-transform:uppercase; color:var(--green); font-weight:800; margin-top:5px; }
+    .head .badge{ margin-left:auto; text-align:right; font-size:10px; color:var(--muted); font-weight:600; line-height:1.5; }
+    .head .badge b{ color:var(--gold); }
+
+    /* hero */
+    .hero{ display:grid; grid-template-columns:1fr 64mm; gap:8mm; align-items:center; padding:6mm 16mm 0; }
+    .hero h2{ font-size:35px; font-weight:800; line-height:1.06; letter-spacing:-.025em; }
+    .hero h2 .accent{ color:var(--green); }   /* solid colour — gradient-clipped text doesn't render in PDF print */
+    .hero p{ font-size:15.5px; line-height:1.6; color:var(--muted); margin-top:11px; font-weight:500; }
+    .hero .emblem{ width:100%; height:auto; }
+
+    /* stats */
+    .stats{ display:flex; gap:0; margin:6mm 16mm 0; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+    .stat{ flex:1; padding:15px 8px; text-align:center; border-right:1px solid var(--line); }
+    .stat:last-child{ border-right:0; }
+    .stat .n{ font-size:29px; font-weight:800; color:var(--green); line-height:1; }
+    .stat .l{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-top:5px; font-weight:700; }
+
+    /* features */
+    .sec-title{ font-size:13px; text-transform:uppercase; letter-spacing:1.8px; color:var(--muted); font-weight:800; margin:6mm 16mm 4mm; }
+    .features{ display:grid; grid-template-columns:1fr 1fr; gap:4mm 9mm; padding:0 16mm; }
+    .feat{ display:flex; gap:13px; }
+    .feat .ic{ width:43px; height:43px; flex:0 0 auto; border-radius:11px; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(180deg,#eafaf0,#dff3e8); color:var(--green); }
+    .feat .ic svg{ width:22px; height:22px; }
+    .feat b{ font-size:15.5px; }
+    .feat span{ display:block; font-size:13px; color:var(--muted); line-height:1.5; margin-top:3px; }
+
+    /* coverage */
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; padding:0 16mm; }
+    .chip{ font-size:13px; font-weight:700; color:#fff; padding:6px 15px; border-radius:999px; }
+
+    /* footer */
+    .foot{ margin-top:auto; padding:6mm 16mm 9mm; border-top:1px solid var(--line); margin-left:0; margin-right:0; }
+    .foot .cta{ display:flex; align-items:center; gap:14px; }
+    .foot .cta .open{ font-size:16px; font-weight:700; color:var(--ink); flex:1 1 auto; min-width:0; }
+    .foot .cta .open code{ background:#f0f5f1; border:1px solid var(--line); border-radius:6px; padding:2px 7px; font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--green); }
+    .foot .meta{ margin-left:auto; font-size:10.5px; color:var(--muted); text-align:right; line-height:1.6; white-space:nowrap; flex:0 0 auto; }
+    .foot .meta b{ color:var(--gold); }
+
+    @page { size:A4; margin:0; }
+    @media print{ html,body{ background:#fff; } .sheet{ margin:0; box-shadow:none; width:210mm; height:297mm; min-height:0; overflow:hidden; } }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <!-- header -->
+    <div class="head">
+      <span class="leaf" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/><path d="M12 6.2V2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><g stroke="#0a3f24" stroke-opacity=".45" stroke-width=".9" stroke-linecap="round"><path d="M12 7.3V20"/><path d="M12 10.1 8.9 8.3"/><path d="M12 10.1 15.1 8.3"/><path d="M12 12.9 8.6 11.3"/><path d="M12 12.9 15.4 11.3"/></g></svg>
+      </span>
+      <div class="brand">
+        <h1>Bodhi Map</h1>
+        <div class="tag">awakening to AI</div>
+      </div>
+      <div class="badge">Open source · <b>MIT</b><br/>Works 100% offline</div>
+    </div>
+
+    <!-- hero -->
+    <div class="hero">
+      <div>
+        <h2>The <span class="accent">map of modern AI</span>, from roots to leaves.</h2>
+        <p>An interactive knowledge graph that connects every idea — from a single token to reasoning models, fine-tuning, and agents. Every concept is a node; every relationship an edge. See the whole landscape at once, and find the path that's right for your problem.</p>
+      </div>
+      <img class="emblem" src="images/bodhi-tree.png" alt="Buddha beneath a Bodhi tree with green leaves and golden roots" />
+    </div>
+
+    <!-- stats -->
+    <div class="stats">
+      <div class="stat"><div class="n">118</div><div class="l">Concepts</div></div>
+      <div class="stat"><div class="n">11</div><div class="l">Themes</div></div>
+      <div class="stat"><div class="n">6</div><div class="l">Compare tables</div></div>
+      <div class="stat"><div class="n">2026</div><div class="l">Current</div></div>
+      <div class="stat"><div class="n">0</div><div class="l">Dependencies</div></div>
+    </div>
+
+    <!-- features -->
+    <div class="sec-title">What you can do</div>
+    <div class="features">
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7 10.5 16M17 7 13.5 16M7 6h10"/></svg></span>
+        <div><b>Explore the graph</b><span>Click any concept for a plain-language explanation, when to use it, code, sources, and its connections.</span></div></div>
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.2 7.8 14.1 14.1 7.8 16.2 9.9 9.9"/></svg></span>
+        <div><b>"Which technique?" wizard</b><span>Answer a few questions and get the right adaptation method — RAG, LoRA, DPO, and beyond.</span></div></div>
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
+        <div><b>Compare side by side</b><span>PEFT methods, preference optimization, attention variants, architectures — trade-offs at a glance.</span></div></div>
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg></span>
+        <div><b>Guided path</b><span>Walk a real workflow: base model → SFT → LoRA → DPO → eval → quantize.</span></div></div>
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg></span>
+        <div><b>Fuzzy search & shareable links</b><span>Find anything in a keystroke; bookmark or share any concept or comparison via its URL.</span></div></div>
+      <div class="feat"><span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg></span>
+        <div><b>Offline & open</b><span>One folder, no install, light & dark themes, MIT-licensed. Built on Google's Open Knowledge Format.</span></div></div>
+    </div>
+
+    <!-- coverage -->
+    <div class="sec-title">Covers the whole stack</div>
+    <div class="chips">
+      <span class="chip" style="background:#3b82f6">Foundations</span>
+      <span class="chip" style="background:#8b5cf6">Architecture</span>
+      <span class="chip" style="background:#06b6d4">Model Archetypes</span>
+      <span class="chip" style="background:#f59e0b">Adaptation</span>
+      <span class="chip" style="background:#10b981">PEFT</span>
+      <span class="chip" style="background:#84cc16">SFT / Instruction</span>
+      <span class="chip" style="background:#ef4444">Alignment</span>
+      <span class="chip" style="background:#14b8a6">Reasoning & Test-Time</span>
+      <span class="chip" style="background:#f97316">Agents & Retrieval</span>
+      <span class="chip" style="background:#ec4899">Efficiency & Infra</span>
+      <span class="chip" style="background:#a78bfa">Data & Evaluation</span>
+    </div>
+
+    <!-- footer -->
+    <div class="foot">
+      <div class="cta">
+        <span class="leaf" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="#1f9d57"/></svg></span>
+        <div class="open">Get started — open it in your browser. No internet required.</div>
+        <div class="meta">Created by <b>Sanjeev</b> · <i>Innovate with Sanjeev</i><br/>Open source under the MIT License</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

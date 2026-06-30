@@ -1,0 +1,21 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node (this project has no runtime deps; npm is only a task runner)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Logs / temp
+*.log
+scratchpad/
+tmp/
+
+# Test & generated artifacts
+scripts/screens/
