@@ -1,137 +1,164 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bodhi Map — Interactive AI & Fine-Tuning Knowledge Graph</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <!-- set theme before paint to avoid flash -->
-  <script>
-    (function () {
-      try { var t = localStorage.getItem('bodhi-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
-    })();
-  </script>
+  <title>Bodhi Map — awakening to AI</title>
+  <style>
+    @font-face { font-family:'Manrope'; font-weight:400; font-display:swap; src:url('fonts/manrope-400.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:500; font-display:swap; src:url('fonts/manrope-500.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:600; font-display:swap; src:url('fonts/manrope-600.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:700; font-display:swap; src:url('fonts/manrope-700.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:800; font-display:swap; src:url('fonts/manrope-800.woff2') format('woff2'); }
+
+    :root{
+      --green:#4fe08a; --green-deep:#1f9d57; --gold:#f3c969;
+      --ink:#eaf3ee; --muted:#9fbcab;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      --bi:88px; /* body indent = leaf width (76) + brandrow gap (12), aligns body text under the title's "B" */
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{
+      font-family:var(--sans); color:var(--ink);
+      background:
+        radial-gradient(680px 620px at 30% 50%, rgba(60,170,100,.16), transparent 62%),
+        radial-gradient(560px 520px at 26% 74%, rgba(210,165,70,.10), transparent 60%),
+        radial-gradient(1200px 900px at 50% 50%, #0e1a13, #060d09 72%);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; letter-spacing:-.01em;
+    }
+    #spark{ position:fixed; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+
+    /* emblem image (left) */
+    .emblem-wrap{ position:fixed; left:0; top:0; bottom:0; width:50%; z-index:2;
+      display:flex; align-items:center; justify-content:center; padding:5vh 2vw; }
+    .emblem{
+      height:min(86vh,820px); width:auto; max-width:92%;
+      filter:drop-shadow(0 14px 50px rgba(70,190,110,.18)) drop-shadow(0 4px 18px rgba(210,165,70,.12));
+      animation:rise 1.4s cubic-bezier(.2,.7,.2,1) both .1s, float 9s ease-in-out 1.4s infinite;
+      transform-origin:center;
+    }
+
+    .panel{
+      position:fixed; z-index:3; top:0; left:50%; right:0; bottom:0;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      text-align:center; padding:6vh 4vw;
+    }
+    .content{ display:flex; flex-direction:column; align-items:flex-start; text-align:left; max-width:100%; }
+    .content > *{ animation:rise 1s cubic-bezier(.2,.7,.2,1) both; }
+    .brandrow{ display:flex; align-items:center; gap:12px; animation-delay:.05s; }
+    .titlestack{ display:inline-flex; flex-direction:column; align-items:stretch; }
+    .brandrow .leaf{ filter:drop-shadow(0 4px 16px rgba(79,224,138,.45)); animation:breathe 7s ease-in-out 1s infinite; }
+    .brandrow .leaf svg{ width:76px; height:76px; color:var(--green); display:block; }
+    .brandrow h1{ font-size:clamp(60px,9vw,114px); font-weight:800; letter-spacing:-.02em; line-height:1;
+      background:
+        linear-gradient(125deg, transparent 16%, rgba(255,255,255,.95) 27%, transparent 38%, transparent 60%, rgba(127,240,170,.85) 71%, transparent 82%),
+        linear-gradient(180deg,#ffffff,#bdeccf);
+      background-size:240% 240%, 100% 100%; background-repeat:no-repeat; background-position:175% -75%, 0 0;
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 2px 22px rgba(79,224,138,.55)) drop-shadow(0 0 46px rgba(79,224,138,.3));
+      animation:shine 7s ease-in-out infinite; }
+    .tag{ font-size:clamp(15px,1.9vw,22px); text-transform:uppercase; letter-spacing:0; color:var(--green); font-weight:700; margin:16px 0 0; animation-delay:.13s;
+      width:95%; align-self:center; text-align:justify; text-align-last:justify; }
+    .lead{ font-size:clamp(15px,1.7vw,18px); line-height:1.7; color:var(--ink); margin:38px 0 0 var(--bi); max-width:430px; animation-delay:.2s; }
+    .lead b{ color:#fff; font-weight:600; }
+    .sub2{ font-size:14px; line-height:1.7; color:var(--muted); margin:14px 0 0 var(--bi); max-width:430px; animation-delay:.27s; }
+    .enter{
+      align-self:flex-start; margin-left:var(--bi); display:inline-flex; align-items:center; gap:11px; margin-top:32px; text-decoration:none;
+      padding:14px 26px 14px 20px; border-radius:999px; font-weight:700; font-size:15.5px; color:#06250f;
+      background:linear-gradient(180deg,var(--green),var(--green-deep));
+      box-shadow:0 12px 34px rgba(79,224,138,.3), inset 0 1px 0 rgba(255,255,255,.3);
+      transition:transform .2s, box-shadow .2s; animation-delay:.36s;
+    }
+    .enter:hover{ transform:translateY(-2px); box-shadow:0 18px 44px rgba(79,224,138,.46), inset 0 1px 0 rgba(255,255,255,.35); }
+    .enter svg{ width:20px; height:20px; }
+    .enter .arrow{ transition:transform .2s; font-weight:800; }
+    .enter:hover .arrow{ transform:translateX(4px); }
+
+    footer{ position:fixed; z-index:3; left:24px; bottom:20px; font-size:11.5px; color:rgba(159,188,171,.7); animation:rise 1.3s both .7s; }
+    footer b{ color:var(--gold); font-weight:700; }
+    footer a{ color:inherit; text-decoration:none; }
+
+    @keyframes rise{ from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
+    @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes breathe{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+    @keyframes shine{ 0%{ background-position:175% -75%, 0 0; } 55%,100%{ background-position:-75% 175%, 0 0; } }
+    @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
+    @media (max-width:900px){
+      .emblem-wrap{ width:100%; align-items:center; }
+      .emblem{ height:auto; width:min(78vw,440px); opacity:.5; }
+      .panel{ width:100%; left:0; right:0; align-items:center; text-align:center; padding:0 26px;
+        background:linear-gradient(180deg, rgba(6,13,9,.35), rgba(6,13,9,.72) 55%); }
+      .content{ align-items:center; text-align:center; width:100%; }
+      .lead,.sub2{ margin-left:auto; margin-right:auto; } .enter{ align-self:center; margin-left:0; }
+      footer{ left:0; right:0; text-align:center; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Top bar -->
-  <header class="topbar">
-    <a class="brand" href="landing.html" data-tip="About Bodhi Map" aria-label="About Bodhi Map — home"><span class="om" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/><path d="M12 6.2V2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><g stroke="#0a3f24" stroke-opacity=".5" stroke-width=".9" stroke-linecap="round"><path d="M12 7.3V20"/><path d="M12 10.1 8.9 8.3"/><path d="M12 10.1 15.1 8.3"/><path d="M12 12.9 8.6 11.3"/><path d="M12 12.9 15.4 11.3"/><path d="M12 15.6 9.2 14.5"/><path d="M12 15.6 14.8 14.5"/></g></svg></span><span class="brand-text"><span class="brand-name">Bodhi&nbsp;Map</span><span class="sub">awakening to AI</span></span></a>
+  <canvas id="spark"></canvas>
 
-    <div class="search-wrap">
-      <input id="search" type="text" placeholder="Search concepts…  (f)" autocomplete="off" aria-label="Search concepts" />
-      <div id="searchResults" class="search-results" role="listbox"></div>
-    </div>
+  <div class="emblem-wrap">
+    <img class="emblem" src="images/bodhi-tree.png" alt="Bodhi Map — a meditating Buddha beneath a Bodhi tree with green leaves and golden roots" />
+  </div>
 
-    <div class="level-bar" role="group" aria-label="Filter concepts by level">
-      <span class="level-caption">Levels</span>
-      <button class="level-chip active" data-level="1" data-tip="Level 1 · Foundations" aria-label="Toggle Level 1 — Foundations"><span class="num">1</span><span class="lbl">Foundations</span></button>
-      <button class="level-chip active" data-level="2" data-tip="Level 2 · Core Mechanics" aria-label="Toggle Level 2 — Mechanics"><span class="num">2</span><span class="lbl">Mechanics</span></button>
-      <button class="level-chip active" data-level="3" data-tip="Level 3 · Adaptation Basics" aria-label="Toggle Level 3 — Adaptation"><span class="num">3</span><span class="lbl">Adaptation</span></button>
-      <button class="level-chip active" data-level="4" data-tip="Level 4 · Fine-Tuning Techniques" aria-label="Toggle Level 4 — Fine-Tuning"><span class="num">4</span><span class="lbl">Fine-Tuning</span></button>
-      <button class="level-chip active" data-level="5" data-tip="Level 5 · Advanced / Alignment" aria-label="Toggle Level 5 — Advanced"><span class="num">5</span><span class="lbl">Advanced</span></button>
-      <button class="new-chip" id="newChip" data-tip="Spotlight concepts added this release, with their connections" aria-label="Spotlight new concepts and their links"><span class="spark" aria-hidden="true">✦</span><span class="lbl">New</span><span class="new-count">0</span></button>
-    </div>
-
-    <div class="toolbar">
-      <div class="tool-group">
-        <button class="btn primary" id="startDecision" data-tip="Decision wizard — find the right technique" aria-label="Decision wizard">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-          <span class="label">Which technique?</span>
-        </button>
-        <button class="btn" id="startPath" data-tip="Guided Path — walk the concepts in order" aria-label="Guided Path">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
-          <span class="label">Guided Path</span>
-        </button>
+  <!-- Branding panel (right) -->
+  <main class="panel">
+    <div class="content">
+    <div class="brandrow">
+      <span class="leaf" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/>
+          <path d="M12 6.2V2.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <g stroke="#06351f" stroke-opacity=".5" stroke-width=".9" stroke-linecap="round">
+            <path d="M12 7.3V20"/><path d="M12 10.1 8.9 8.3"/><path d="M12 10.1 15.1 8.3"/>
+            <path d="M12 12.9 8.6 11.3"/><path d="M12 12.9 15.4 11.3"/><path d="M12 15.6 9.2 14.5"/><path d="M12 15.6 14.8 14.5"/>
+          </g>
+        </svg>
+      </span>
+      <div class="titlestack">
+        <h1>Bodhi&nbsp;Map</h1>
+        <p class="tag" aria-label="awakening to AI">a w a k e n i n g &nbsp; t o &nbsp; a i</p>
       </div>
-
-      <span class="tool-divider" aria-hidden="true"></span>
-
-      <div class="tool-group">
-        <button class="btn ghost icon-only" id="fitBtn" data-tip="Fit graph to screen" aria-label="Fit graph to screen">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-          <span class="label">Fit</span>
-        </button>
-        <button class="btn ghost icon-only" id="relayoutBtn" data-tip="Recompute layout" aria-label="Re-layout graph">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
-          <span class="label">Re-layout</span>
-        </button>
-        <button class="btn ghost icon-only" id="exportBtn" data-tip="Export the knowledge base as one LLM-ready file (OKF)" aria-label="Export knowledge base for agents">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span class="label">For agents</span>
-        </button>
-        <button class="btn ghost icon-only" id="compareBtn" data-tip="Compare techniques side by side" aria-label="Compare techniques">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
-          <span class="label">Compare</span>
-        </button>
-      </div>
-
-      <span class="tool-divider" aria-hidden="true"></span>
-
-      <button class="icon-btn" id="helpBtn" data-tip="Help & welcome" aria-label="Help and welcome">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </button>
-      <button class="icon-btn" id="themeToggle" data-tip="Toggle light / dark theme" aria-label="Toggle theme"></button>
     </div>
-  </header>
-
-  <!-- Graph -->
-  <div id="cy"></div>
-
-  <!-- Minimap (orientation) -->
-  <div id="minimap" class="minimap" data-tip="Minimap — click/drag to pan · m to hide" aria-hidden="true">
-    <canvas id="minimapCanvas"></canvas>
-  </div>
-
-  <!-- Legend dock (collapsible) -->
-  <button class="icon-btn dock-toggle" id="dockToggle" data-tip="Show legend & filters" aria-label="Show legend">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-  </button>
-  <aside class="dock" id="dock">
-    <div class="dock-head">
-      <span class="dock-title">Legend &amp; filters</span>
-      <button class="dock-collapse" id="dockCollapse" data-tip="Collapse" aria-label="Collapse legend">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+    <p class="lead">A calm, living map of how modern AI fits together — <b>every idea a node, every connection an edge.</b></p>
+    <p class="sub2">Knowledge grows from roots: ~120 concepts from a single token to reasoning models, fine-tuning, and agents. See the whole landscape at once, and find the path that's right for your problem.</p>
+    <a class="enter" href="app.html">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
+      Enter the map <span class="arrow">→</span>
+    </a>
     </div>
-    <div class="legend-section">
-      <h3>Explore by theme <span class="h3-hint">tap ● to hide · name to zoom</span></h3>
-      <div id="legend"></div>
-    </div>
-    <div class="legend-section">
-      <h3>Relationships</h3>
-      <div id="relLegend"></div>
-    </div>
-  </aside>
+  </main>
 
-  <!-- Detail panel -->
-  <aside id="panel" class="panel" aria-live="polite"></aside>
+  <footer>Open&nbsp;source · MIT &nbsp;·&nbsp; <a href="app.html"><b>Innovate with Sanjeev</b></a></footer>
 
-  <!-- Guided path -->
-  <div id="guidedBox" class="float-box"></div>
-  <!-- Decision wizard -->
-  <div id="decisionBox" class="float-box"></div>
-
-  <!-- Welcome / onboarding modal -->
-  <div id="welcomeModal" class="modal" role="dialog" aria-modal="true" aria-label="Welcome to LLM Bodhi">
-    <div class="modal-card welcome-card" id="welcomeCard"></div>
-  </div>
-
-  <!-- Compare modal -->
-  <div id="compareModal" class="modal" role="dialog" aria-modal="true" aria-label="Compare techniques">
-    <div class="modal-card" id="compareCard"></div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast" class="toast"></div>
-
-  <div class="hint">Click a node · drag to pan · scroll to zoom · <kbd>f</kbd> search <kbd>↑</kbd><kbd>↓</kbd><kbd>↵</kbd> · <kbd>t</kbd> theme · <kbd>m</kbd> map · <kbd>?</kbd> help · <kbd>Esc</kbd> close · shareable</div>
-
-  <script src="js/cytoscape.min.js"></script>
-  <!-- fcose layout extension (offline) — load order: layout-base → cose-base → fcose -->
-  <script src="js/layout-base.js"></script>
-  <script src="js/cose-base.js"></script>
-  <script src="js/cytoscape-fcose.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/graph.js"></script>
+  <script>
+    (function () {
+      var c = document.getElementById('spark'), x = c.getContext('2d');
+      var DPR = Math.min(window.devicePixelRatio || 1, 2), W, H, parts;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function rnd(a, b){ return a + Math.random() * (b - a); }
+      function size(){ W = c.width = innerWidth * DPR; H = c.height = innerHeight * DPR; }
+      function make(){ return { x: rnd(0, W), y: rnd(0, H), r: rnd(.5, 1.8) * DPR, vy: -rnd(.04, .26) * DPR,
+        vx: rnd(-.08, .08) * DPR, ph: rnd(0, 6.28), tw: rnd(.6, 1.7), gold: Math.random() < 0.4 }; }
+      function init(){ size(); var n = Math.max(30, Math.min(80, Math.floor(innerWidth / 18))); parts = []; for (var i=0;i<n;i++) parts.push(make()); }
+      var t = 0;
+      function frame(){
+        x.clearRect(0,0,W,H); t += 0.016;
+        for (var i=0;i<parts.length;i++){
+          var p = parts[i]; p.y += p.vy; p.x += p.vx;
+          if (p.y < -8) { parts[i] = make(); parts[i].y = H + 8; }
+          x.globalAlpha = 0.25 + 0.4 * (0.5 + 0.5 * Math.sin(t * p.tw + p.ph));
+          x.fillStyle = p.gold ? '#f3c969' : '#7df0aa';
+          x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.2832); x.fill();
+        }
+        requestAnimationFrame(frame);
+      }
+      init();
+      if (reduce){ x.globalAlpha=.5; for (var i=0;i<parts.length;i++){ x.fillStyle=parts[i].gold?'#f3c969':'#7df0aa'; x.beginPath(); x.arc(parts[i].x,parts[i].y,parts[i].r,0,6.2832); x.fill(); } }
+      else frame();
+      window.addEventListener('resize', init);
+    })();
+  </script>
 </body>
 </html>

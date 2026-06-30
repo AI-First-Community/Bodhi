@@ -110,7 +110,7 @@ The build prints concept/edge counts and (if any) warnings about unknown relatio
 
 - **Cite a real source** for every concept — a paper, official blog, or docs.
 - **Be accurate and current** — verify claims against the source; prefer established techniques and clearly mark genuinely new ones.
-- **Stay offline** — no CDNs, external fonts, scripts, or icons (icons are inline SVG; fonts are vendored). Quick check: `grep -rn 'http' index.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'` should be empty.
+- **Stay offline** — no CDNs, external fonts, scripts, or icons (icons are inline SVG; fonts are vendored). Quick check: `grep -rn 'http' index.html app.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'` should be empty.
 - **Keep it balanced** — a clean, accurate graph matters more than raw size.
 
 Adding something that needs a **new cluster, relation type, level, wizard step, or comparison table**? Those live in `okf.config.js` — see the **[Configuration Reference](Configuration-Reference.md)**.

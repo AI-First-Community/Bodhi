@@ -34,7 +34,7 @@ Contributions — new concepts, corrections, better explanations, features — a
 - **Be current and accurate** — verify claims against the source; prefer established techniques and clearly mark genuinely new ones.
 - **Stay offline** — no CDNs, external fonts, scripts, or icons. Quick check:
   ```bash
-  grep -rn 'http' index.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'   # should be empty
+  grep -rn 'http' index.html app.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'   # should be empty
   ```
 - **Keep it balanced** — a clean, accurate, well-connected graph matters more than raw size. Avoid orphan nodes; add 2–4 meaningful relations.
 

@@ -59,7 +59,7 @@ async function clickNode(page, id) {
   page.on('pageerror', (e) => console.log('  ⚠ page error:', e.message));
 
   try {
-    await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'load' });
+    await page.goto(`http://localhost:${PORT}/app.html`, { waitUntil: 'load' });
     await page.waitForFunction(() => window._cy && window._cy.nodes().length > 0, { timeout: 15000 });
     await page.waitForTimeout(1400);                  // let fcose layout settle
     await page.keyboard.press('Escape');              // dismiss first-visit welcome
@@ -179,21 +179,21 @@ async function clickNode(page, id) {
 
     // 12) deep-link restore (fresh pages)
     const p2 = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
-    await p2.goto(`http://localhost:${PORT}/index.html#concept=mla`, { waitUntil: 'load' });
+    await p2.goto(`http://localhost:${PORT}/app.html#concept=mla`, { waitUntil: 'load' });
     await p2.waitForFunction(() => window._cy && window._cy.nodes().length > 0, { timeout: 15000 });
     await p2.waitForTimeout(1500);
     const dlH2 = await p2.textContent('.panel h2');
     const dlActive = await p2.evaluate(() => window._cy.nodes('.path-active').map((n) => n.id()));
     ok('deep link #concept=mla restores that node', dlActive.includes('mla') && /MLA|Latent/i.test(dlH2 || ''), `h2=${dlH2}`);
     await shot(p2, '12-deeplink-concept');
-    await p2.goto(`http://localhost:${PORT}/index.html#compare=peft`, { waitUntil: 'load' });
+    await p2.goto(`http://localhost:${PORT}/app.html#compare=peft`, { waitUntil: 'load' });
     await p2.waitForFunction(() => window._cy, { timeout: 15000 }); await p2.waitForTimeout(1500);
     ok('deep link #compare=peft opens the Compare modal', await p2.evaluate(() => document.getElementById('compareModal').classList.contains('open')));
     await p2.close();
 
     // 13) mobile viewport adapts
     const m = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
-    await m.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'load' });
+    await m.goto(`http://localhost:${PORT}/app.html`, { waitUntil: 'load' });
     await m.waitForFunction(() => window._cy && window._cy.nodes().length > 0, { timeout: 15000 });
     await m.waitForTimeout(1400);
     await m.keyboard.press('Escape');

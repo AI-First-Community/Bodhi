@@ -37,8 +37,8 @@ A few principles guide it:
 ## Run
 
 ```bash
-open index.html          # macOS — opens in default browser
-# or double-click index.html
+open index.html          # the landing page — then click "Enter the map"
+# or open app.html directly for the interactive graph
 ```
 
 ## Features
@@ -117,7 +117,8 @@ New clusters / relation types / wizard steps live in `okf.config.js`. The bundle
 
 | File | Purpose |
 |------|---------|
-| `index.html` | App shell + UI |
+| `index.html` | Landing page — the site front door |
+| `app.html` | The interactive map — app shell + UI |
 | `css/style.css` | Light/dark themes, typography, panel & graph layout |
 | `fonts/` | Manrope (woff2, 400–800) — vendored locally, no font CDN |
 | `knowledge/` | **OKF bundle — the source of truth** (concepts + typed relations) |

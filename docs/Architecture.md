@@ -17,7 +17,7 @@ knowledge/            okf.config.js
           js/data.js               ← GENERATED runtime (CLUSTERS, LEVELS,
                 │                     RELATIONS, RELEASE, GRAPH)
                 ▼
-   index.html → js/graph.js         ← Cytoscape renders the graph + UI
+   app.html → js/graph.js           ← Cytoscape renders the graph + UI
                 │
        scripts/validate.js          ← integrity gate (runs after every build)
 ```
@@ -38,8 +38,8 @@ Browsers can't `fetch()` local markdown over `file://`, so the app can't read `k
 | `js/cytoscape.min.js` + `cose-base.js` + `layout-base.js` + `cytoscape-fcose.js` | Vendored graph library + `fcose` layout (offline). |
 | `css/style.css` | Themes (light/dark), typography, panel & graph layout. |
 | `fonts/` | Manrope (woff2) vendored locally — no font CDN. |
-| `index.html` | App shell + top bar + dock. |
-| `landing.html` | Standalone landing/intro page. |
+| `index.html` | Landing/intro page — the site front door. |
+| `app.html` | The interactive map — app shell + top bar + dock. |
 
 ## How the build works (`scripts/okf.js build`)
 

@@ -1,6 +1,6 @@
 # User Guide
 
-Everything the Bodhi Map app can do. Open `index.html` and follow along.
+Everything the Bodhi Map app can do. Open `app.html` (the interactive map — or click *Enter the map* from the `index.html` landing) and follow along.
 
 ## The graph
 

@@ -9,13 +9,13 @@ Clone (or download) the repo and open the app:
 ```bash
 git clone https://github.com/AI-First-Community/Bodhi.git
 cd Bodhi
-open index.html        # macOS — opens in your default browser
-# or simply double-click index.html in a file manager
+open index.html        # macOS — opens the landing page; click "Enter the map"
+# or open app.html directly for the interactive graph
 ```
 
 That's it. No server, no internet connection, no build step. The graph, fonts, and libraries are all vendored locally so it works over `file://`.
 
-> **Landing page:** `landing.html` is the project's intro page; `index.html` is the interactive map itself. The brand link in the app's top-left returns to the landing page.
+> **Two entry points:** `index.html` is the landing/intro page (the site front door); `app.html` is the interactive map itself. The landing's *Enter the map* button opens the app, and the app's brand link (top-left) returns to the landing.
 
 ## First five minutes
 

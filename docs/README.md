@@ -42,7 +42,7 @@ okf.config.js   ← clusters, levels, relations, release, interactive flows
 scripts/        ← build + validate tooling (no deps)
 js/data.js      ← GENERATED (do not hand-edit)
 js/graph.js     ← the app (Cytoscape.js, vendored offline)
-index.html      ← app shell · landing.html ← landing page
+index.html      ← landing page (front door) · app.html ← the interactive map
 ```
 
 ## Documentation map
