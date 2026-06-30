@@ -1,0 +1,27 @@
+// Bodhi Map — green brand accents for the docs site.
+// Plain-CSS overrides (valid SCSS) layered on just-the-docs' light scheme,
+// kept minimal so a typo can never break the Pages build.
+
+$bodhi-green: #1f9d57;
+$bodhi-green-deep: #0e7a40;
+
+// Content + nav links
+.main-content a { color: $bodhi-green; }
+.main-content a:hover { color: $bodhi-green-deep; }
+
+// Active sidebar item
+.nav-list .nav-list-item .nav-list-link.active { color: $bodhi-green-deep; }
+.nav-list .nav-list-item .nav-list-link.active::before { background-color: $bodhi-green; }
+
+// Search focus
+.search-input:focus {
+  border-color: $bodhi-green !important;
+  box-shadow: 0 0 0 2px rgba(31, 157, 87, 0.18);
+}
+
+// Buttons + site title
+.btn-primary { background-color: $bodhi-green; border-color: $bodhi-green; }
+.site-title:hover { color: $bodhi-green; }
+
+// Inline code tint
+.main-content code { color: $bodhi-green-deep; }

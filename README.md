@@ -2,6 +2,8 @@
 
 *An open, interactive knowledge graph of modern AI.*
 
+### 🔗 [Open the live map ↗](https://ai-first-community.github.io/Bodhi/) · [Documentation ↗](https://ai-first-community.github.io/Bodhi/docs/)
+
 Understand AI from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization. Every concept is a node; edges show how techniques relate, improve on, or combine with each other.
 
 Fully **offline & self-contained** — no internet, no build step. Just open `index.html`.
