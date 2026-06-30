@@ -77,7 +77,8 @@ current.
   duplicate ids, missing fields, cluster/relation validity, and bundle↔data sync.
 - **Stay offline.** No CDNs, no external fonts/scripts/icons. Icons are inline
   SVG; fonts are vendored in `fonts/`. Quick check:
-  `grep -rn 'http' index.html app.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'`
+  `grep -rn 'http' app.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'`
+  (the `index.html` landing intentionally links out to GitHub/LinkedIn)
   should be empty.
 - **Cite a real source** for every concept (a paper, official blog, or docs).
 - **Be current and accurate** — prefer established techniques; mark genuinely new
