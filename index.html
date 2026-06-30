@@ -75,12 +75,13 @@
     .enter .arrow{ transition:transform .2s; font-weight:800; }
     .enter:hover .arrow{ transform:translateX(4px); }
 
-    .social{ align-self:flex-start; margin:26px 0 0 var(--bi); display:flex; gap:13px; animation-delay:.42s; }
-    .social a{ width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center;
-      border:1px solid rgba(159,188,171,.28); border-radius:12px; color:var(--ink);
+    .social{ position:fixed; top:18px; right:20px; z-index:5; display:flex; gap:9px; margin:0; animation:rise 1.2s both .55s; }
+    .social a{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid rgba(159,188,171,.24); border-radius:10px; color:var(--ink);
+      background:rgba(6,13,9,.32); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
       transition:color .2s, border-color .2s, transform .2s, background .2s; }
-    .social a:hover{ color:var(--green); border-color:var(--green); transform:translateY(-2px); background:rgba(79,224,138,.08); }
-    .social a svg{ width:20px; height:20px; display:block; }
+    .social a:hover{ color:var(--green); border-color:var(--green); transform:translateY(-1px); background:rgba(79,224,138,.12); }
+    .social a svg{ width:16px; height:16px; display:block; }
 
     footer{ position:fixed; z-index:3; left:24px; bottom:20px; font-size:11.5px; color:rgba(159,188,171,.7); animation:rise 1.3s both .7s; }
     footer b{ color:var(--gold); font-weight:700; }
@@ -98,7 +99,7 @@
         background:linear-gradient(180deg, rgba(6,13,9,.35), rgba(6,13,9,.72) 55%); }
       .content{ align-items:center; text-align:center; width:100%; }
       .lead,.sub2{ margin-left:auto; margin-right:auto; } .enter{ align-self:center; margin-left:0; }
-      .social{ align-self:center; margin-left:0; justify-content:center; }
+      .social{ top:14px; right:14px; gap:7px; }
       footer{ left:0; right:0; text-align:center; }
     }
   </style>
