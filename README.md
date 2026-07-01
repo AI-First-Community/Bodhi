@@ -55,6 +55,22 @@ The hard part of learning modern AI isn't finding definitions — it's seeing th
 
 </details>
 
+## Features
+
+- **🕸️ Interactive graph** — 123 concepts across 11 clusters, color-coded, with **typed edges** (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`) on a clean force-directed layout.
+- **🔍 Rich detail on every node** — plain-language summary, deeper detail, *when to use*, a code snippet, its connections, and paper references.
+- **🧭 Which technique?** — a decision wizard that recommends the right approach (RAG vs prompting vs LoRA/QLoRA vs full fine-tuning vs DPO/RLVR).
+- **▶ Guided Path** — an animated walkthrough of a real workflow (base model → SFT → LoRA → DPO → eval → quantize).
+- **⚖️ Compare** — side-by-side matrices for PEFT methods, preference optimization, attention variants, and more.
+- **🗺️ Build your own learning map** — pick your topics → a personalized, saved, shareable view.
+- **⬇️ For agents** — one-click export of the whole knowledge base as a single **LLM-ready** markdown file for RAG/agents.
+- **⚡ Fast to use** — fuzzy search (`f`), level & cluster filters, a ✦ "what's new" highlight, light/dark themes, and shareable deep links (`#concept=lora`).
+- **📱 Offline & installable** — zero dependencies, works over `file://`, installable as a PWA on desktop or mobile.
+
+### Coverage
+
+Foundations & architecture (tokens → attention → MoE) · the full adaptation ladder · all major PEFT methods · SFT & instruction tuning · preference alignment (RLHF/PPO, DPO, IPO, KTO, ORPO, SimPO, GRPO, RLVR, RLAIF) · efficiency (quantization, GPTQ/AWQ, distillation, FSDP/ZeRO, FlashAttention, speculative decoding, model merging) · reasoning, agents, data & evaluation.
+
 ## Why "Bodhi"? — motivation & philosophy
 
 **Bodhi** (बोधि) is a Sanskrit/Pali word for *awakening* — the moment scattered
@@ -80,42 +96,18 @@ A few principles guide it:
 - **A path, not a pile** — clustered from foundations to the frontier so you can
   walk from tokens to agents at your own pace.
 
-## Run
+## Get it
 
-```bash
-open index.html          # the landing page — then click "Enter the map"
-# or open app.html directly for the interactive graph
-```
+**Use it now — nothing to install:** just open the **[live app ↗](https://ai-first-community.github.io/Bodhi/)**.
 
-## 📱 Install as an app (PWA)
+**Install it as an app (PWA)** — works offline, launches full-screen, adds to your home screen / dock:
 
-Bodhi Map is an installable **Progressive Web App** — it works offline and adds to your home screen / dock like a native app, on desktop **or** mobile.
+- **Desktop:** open the live site → click the install icon in the address bar.
+- **Mobile:** open the site → *Add to Home Screen* (iOS) or the *Install app* prompt (Android) — or scan:
 
-- **Desktop:** open the [live site](https://ai-first-community.github.io/Bodhi/) → click the install icon in the address bar (or browser menu → *Install Bodhi Map*).
-- **Mobile:** open the site → *Share → Add to Home Screen* (iOS) or the *Install app* prompt (Android).
-- **Or scan to open on your phone:**
+  <img src="images/qr-bodhi.gif" alt="QR code — scan to open Bodhi Map" width="160" height="160" />
 
-  <img src="images/qr-bodhi.gif" alt="QR code — scan to open Bodhi Map" width="180" height="180" />
-
-Once installed it launches full-screen and works with no internet connection.
-
-## Features
-
-- **Graph view** — 123 concepts across 11 clusters (Foundations · Architecture · Model Archetypes · Adaptation Spectrum · PEFT · SFT/Instruction · Alignment/Preference · Reasoning & Test-Time · Agents & Retrieval · Efficiency & Infra · Data & Evaluation), color-coded, with typed edges (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`). Force-directed `fcose` layout with clean cluster separation.
-- **Click any node** → detail panel: plain-language summary, deeper detail, *when to use*, a code snippet, connections, and paper references.
-- **🧭 Which technique?** — an interactive decision wizard that asks a few questions and recommends the right rung of the adaptation ladder (RAG vs prompting vs LoRA/QLoRA vs full fine-tuning vs DPO/RLVR), then opens it in the graph.
-- **▶ Guided Path** — an animated walkthrough of a real workflow: base model → SFT → LoRA → DPO → eval → quantize.
-- **Compare** — side-by-side matrices for the technique families people most need to choose between: PEFT methods (LoRA · QLoRA · DoRA · AdaLoRA · Adapters · Prefix/Prompt/P-tuning · IA³ · BitFit) and Preference optimization (PPO · DPO · IPO · KTO · ORPO · SimPO · GRPO), across dimensions like trainable params, VRAM, mergeability, reward/reference-model needs, and pipeline. Click any technique to jump to it in the graph.
-- **⬇ For agents** — one click downloads the entire knowledge base as a single LLM-ready markdown context file (`llm-bodhi-knowledge.md`): every concept with its type, summary, detail, when-to-use, example, typed relations, and references. Drop it into an LLM/RAG pipeline as grounding context — the agent-ready payoff of the OKF backing.
-- **Light / dark theme** — toggle in the top-right (or press `t`); preference persists across sessions.
-- **Fuzzy search** (`f`) — ranked, typo-tolerant matching over names + summaries (e.g. "attn" → Attention), with `↑`/`↓`/`Enter` keyboard navigation. **Level filters** — focus from Foundations (1) to Advanced/Alignment (5). **Cluster filters** — the legend dock doubles as a filter: click a swatch to show/hide that cluster (label still zooms), so you can pare the map down to your interest.
-- **✦ What's new** — concepts added in the current release are marked (`added:` in frontmatter, keyed to a `RELEASE` version), shown with a green ring on the graph and a **New** chip in the toolbar that filters to just the additions — so every release can highlight what changed.
-- **Shareable deep links** — the open concept or comparison is encoded in the URL hash (`#concept=lora`, `#compare=peft`), so any view can be bookmarked or shared and reopens exactly there.
-- **Responsive** — adapts to narrow screens; legend dock collapses on mobile.
-
-### Coverage highlights
-
-Foundations & architecture (tokens → attention → MoE) · the full adaptation ladder · all major PEFT methods (LoRA, QLoRA, DoRA, AdaLoRA, adapters, prefix/prompt/P-tuning, IA³, BitFit) · SFT & instruction tuning · preference alignment (RLHF/PPO, DPO, IPO, KTO, ORPO, SimPO, **GRPO**, **RLVR**, rejection sampling, RLAIF) · efficiency (quantization, GPTQ/AWQ, distillation, FSDP/ZeRO, FlashAttention, **speculative decoding**, **model merging**) · data & evaluation.
+**Run locally:** clone the repo and open `index.html` (landing → *Enter the map*) or `app.html` directly — no server, no build step.
 
 ## Built on the Open Knowledge Format (OKF)
 
