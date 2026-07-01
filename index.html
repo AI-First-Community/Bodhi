@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bodhi Map — awakening to AI</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0e1a13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bodhi Map" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <style>
     @font-face { font-family:'Manrope'; font-weight:400; font-display:swap; src:url('fonts/manrope-400.woff2') format('woff2'); }
     @font-face { font-family:'Manrope'; font-weight:500; font-display:swap; src:url('fonts/manrope-500.woff2') format('woff2'); }
@@ -226,6 +233,12 @@
       render();
       window.addEventListener('pagehide', function () { try { audio.pause(); } catch (e) {} });
     })();
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('service-worker.js').catch(function () {}); });
+    }
   </script>
 </body>
 </html>

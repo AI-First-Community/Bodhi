@@ -1,0 +1,17 @@
+{
+  "name": "Bodhi Map — Knowledge Graph of Modern AI",
+  "short_name": "Bodhi Map",
+  "description": "An open, interactive knowledge graph of modern AI — 123 concepts from tokens to agents, fully offline.",
+  "start_url": "app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#060d09",
+  "theme_color": "#0e1a13",
+  "lang": "en",
+  "categories": ["education", "reference", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
