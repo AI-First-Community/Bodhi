@@ -10,6 +10,12 @@
   <a href="https://github.com/AI-First-Community/Bodhi/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/AI-First-Community/Bodhi?style=flat-square&color=f3c969&label=%E2%AD%90%20Star"></a>
 </p>
 
+<p align="center">
+  <a href="https://ai-first-community.github.io/Bodhi/"><img src="images/demo.gif" alt="Bodhi Map demo — explore the graph, open a concept and its connections, then build your own learning map" width="760"></a>
+</p>
+
+<p align="center"><a href="https://ai-first-community.github.io/Bodhi/"><b>▶ Try the live app</b></a></p>
+
 > **123 concepts · 11 clusters · fully offline · zero dependencies.**
 > Understand AI from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization — every concept a node, every connection an edge.
 
