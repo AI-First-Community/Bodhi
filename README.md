@@ -1,12 +1,21 @@
-# Bodhi Map 🍃
+<h1 align="center">Bodhi Map 🍃</h1>
 
-*An open, interactive knowledge graph of modern AI.*
+<p align="center"><em>An open, interactive knowledge graph of modern AI — from tokens &amp; attention to LoRA, DPO, reasoning models, and agents.</em></p>
 
-### 🔗 [Open the live map ↗](https://ai-first-community.github.io/Bodhi/) · [Documentation ↗](https://ai-first-community.github.io/Bodhi/docs/)
+<p align="center">
+  <a href="https://ai-first-community.github.io/Bodhi/"><img alt="Live app" src="https://img.shields.io/badge/▶_Live-Open_the_map-1f9d57?style=flat-square"></a>
+  <a href="https://ai-first-community.github.io/Bodhi/docs/"><img alt="Docs" src="https://img.shields.io/badge/📖-Docs-64748b?style=flat-square"></a>
+  <a href="https://ai-first-community.github.io/Bodhi/"><img alt="Installable PWA" src="https://img.shields.io/badge/📱-Installable_PWA-8b5cf6?style=flat-square"></a>
+  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/License-MIT-a78bfa?style=flat-square"></a>
+  <a href="https://github.com/AI-First-Community/Bodhi/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/AI-First-Community/Bodhi?style=flat-square&color=f3c969&label=%E2%AD%90%20Star"></a>
+</p>
 
-Understand AI from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization. Every concept is a node; edges show how techniques relate, improve on, or combine with each other.
+> **123 concepts · 11 clusters · fully offline · zero dependencies.**
+> Understand AI from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization — every concept a node, every connection an edge.
 
-Fully **offline & self-contained** — no internet, no build step. Just open `index.html`.
+**Find it useful?** [**⭐ Star the repo**](https://github.com/AI-First-Community/Bodhi) to help others discover it, and [**contribute a concept**](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue) — adding one is just writing a Markdown file.
+
+Fully **offline & self-contained** — no internet, no build step. Just open the [live app](https://ai-first-community.github.io/Bodhi/) or `index.html` locally.
 
 > Open source — contributions welcome. Concepts are plain markdown in [`knowledge/`](knowledge/) (see [Editing / extending](#editing--extending)).
 > Created by **Sanjeev** · *Innovate with Sanjeev*.
@@ -153,10 +162,14 @@ extending Bodhi Map:
 
 ## Contributing
 
-Contributions — new concepts, corrections, better explanations — are welcome.
-Adding a concept is just writing a Markdown file in [`knowledge/`](knowledge/)
-and running `npm run build` (which validates). See [CONTRIBUTING.md](CONTRIBUTING.md)
-and the [Concept Authoring](docs/Concept-Authoring.md) guide for the format and quality bar.
+Contributions — new concepts, corrections, better explanations — are welcome, and the project is set up to be **self-serve**:
+
+- 🌱 **Pick up an issue** — start with a [**good first issue**](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue) or a [`help wanted`](https://github.com/AI-First-Community/Bodhi/labels/help%20wanted) task; comment to claim it.
+- 💡 **Suggest a concept or report an error** — via an [issue template](https://github.com/AI-First-Community/Bodhi/issues/new/choose).
+- 💬 **Ask or discuss** in [Discussions](https://github.com/AI-First-Community/Bodhi/discussions).
+- 🗺️ See the [BACKLOG](BACKLOG.md) for the roadmap.
+
+Adding a concept is just writing a Markdown file in [`knowledge/`](knowledge/) and running `npm run build` (which validates). See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Concept Authoring](docs/Concept-Authoring.md) guide for the format and quality bar — the only hard rules: **cite a real source, keep it accurate, and stay offline.**
 
 ## Credits & sources
 

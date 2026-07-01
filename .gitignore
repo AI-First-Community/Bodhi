@@ -19,3 +19,6 @@ tmp/
 
 # Test & generated artifacts
 scripts/screens/
+
+# Local launch/marketing drafts (not for the public repo)
+PROMOTION.md
