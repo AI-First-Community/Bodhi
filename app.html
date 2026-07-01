@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bodhi Map — Interactive AI & Fine-Tuning Knowledge Graph</title>
+  <!-- Small screens get the touch-friendly mobile view (override with ?desktop=1) -->
+  <script>
+    (function () {
+      try {
+        if (!/[?&]desktop=1/.test(location.search) && window.matchMedia && window.matchMedia('(max-width: 820px)').matches) {
+          location.replace('m.html' + location.hash);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0e1a13" />

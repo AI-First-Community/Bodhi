@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Bodhi Map — Modern AI, on your phone</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a1410" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bodhi Map" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <style>
+    @font-face { font-family:'Manrope'; font-weight:400; font-display:swap; src:url('fonts/manrope-400.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:600; font-display:swap; src:url('fonts/manrope-600.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:700; font-display:swap; src:url('fonts/manrope-700.woff2') format('woff2'); }
+    @font-face { font-family:'Manrope'; font-weight:800; font-display:swap; src:url('fonts/manrope-800.woff2') format('woff2'); }
+    :root{
+      --bg:#0a1410; --bg2:#0f1c16; --card:#12211a; --line:rgba(159,188,171,.14);
+      --ink:#eaf3ee; --muted:#9fbcab; --green:#4fe08a; --green-deep:#1f9d57; --gold:#f3c969;
+      --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:var(--sans);color:var(--ink);min-height:100vh;
+      background:radial-gradient(560px 420px at 82% -6%, rgba(60,170,100,.13), transparent 60%), var(--bg);
+      -webkit-font-smoothing:antialiased;}
+    .m-top{position:sticky;top:0;z-index:10;background:rgba(10,20,16,.92);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+      padding:calc(12px + env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line);}
+    .m-brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;letter-spacing:-.01em;}
+    .m-brand svg{width:22px;height:22px;color:var(--green);filter:drop-shadow(0 3px 10px rgba(79,224,138,.4));}
+    .m-brand .count{margin-left:auto;font-size:11px;font-weight:700;color:var(--muted);}
+    .m-search{margin-top:11px;width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+      background:var(--bg2);color:var(--ink);font-size:16px;font-family:inherit;}
+    .m-search:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(79,224,138,.14);}
+    .m-chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none;}
+    .m-chips::-webkit-scrollbar{display:none}
+    .chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;
+      border:1px solid var(--line);background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+      font-family:inherit;cursor:pointer;white-space:nowrap;}
+    .chip .dot{width:9px;height:9px;border-radius:3px;}
+    .chip.active{background:var(--card);color:var(--ink);border-color:var(--green);}
+    .m-list{padding:4px 16px 40px;display:flex;flex-direction:column;gap:10px;}
+    .m-group-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);
+      font-weight:800;margin:16px 2px 3px;}
+    .card{position:relative;border:1px solid var(--line);border-radius:14px;background:var(--card);
+      padding:13px 14px 13px 17px;overflow:hidden;cursor:pointer;transition:border-color .15s, transform .06s;}
+    .card:active{transform:scale(.99);}
+    .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,#888);}
+    .card h3{font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .card .lvl{font-size:10px;font-weight:800;color:var(--muted);background:var(--bg2);border-radius:999px;padding:2px 7px;margin-left:auto;}
+    .card .newb{font-size:9px;font-weight:800;color:#06250f;background:var(--green);border-radius:999px;padding:2px 6px;}
+    .card p{margin-top:5px;font-size:13px;line-height:1.5;color:var(--muted);}
+    .empty{text-align:center;color:var(--muted);padding:50px 20px;font-size:14px;}
+    .m-foot{text-align:center;padding:8px 20px 34px;font-size:12px;color:var(--muted);}
+    .m-foot a{color:var(--green);text-decoration:none;font-weight:600;}
+    /* detail sheet */
+    .m-sheet{position:fixed;inset:0;z-index:50;display:none;}
+    .m-sheet.open{display:block;}
+    .m-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58);}
+    .m-panel{position:absolute;left:0;right:0;bottom:0;max-height:90vh;overflow-y:auto;
+      background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--line);
+      padding:8px 18px calc(34px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.7,.2,1);}
+    @keyframes up{from{transform:translateY(34px);opacity:.5}to{transform:none;opacity:1}}
+    .m-close{position:sticky;top:6px;float:right;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
+      background:var(--bg2);color:var(--ink);font-size:19px;line-height:1;cursor:pointer;}
+    .m-grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:8px auto 14px;}
+    .m-tag{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--c,var(--green));
+      display:flex;align-items:center;gap:8px;flex-wrap:wrap;clear:both;}
+    .m-panel h2{font-size:24px;font-weight:800;margin:9px 0 10px;letter-spacing:-.015em;line-height:1.1;}
+    .m-sum{font-size:15px;line-height:1.55;color:var(--ink);border-left:3px solid var(--c,var(--green));padding-left:13px;}
+    .m-detail{margin-top:14px;font-size:14px;line-height:1.65;color:var(--muted);}
+    .m-h{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:800;margin:20px 0 8px;}
+    .m-when{font-size:14px;line-height:1.6;color:var(--ink);background:var(--card);border-radius:12px;padding:12px 14px;}
+    .m-code{background:#08120d;border:1px solid var(--line);border-radius:12px;padding:12px;overflow-x:auto;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5;color:#bfe8cf;white-space:pre;}
+    .m-conns{display:flex;flex-direction:column;gap:7px;}
+    .m-conn{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid var(--line);border-radius:11px;
+      background:var(--card);cursor:pointer;font-size:13px;}
+    .m-conn:active{border-color:var(--green);}
+    .m-conn .dot{width:8px;height:8px;border-radius:2px;flex:0 0 auto;}
+    .m-conn .rel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;flex:0 0 auto;}
+    .m-conn .to{font-weight:600;color:var(--ink);}
+    .m-refs a{display:block;color:var(--green);text-decoration:none;font-size:13px;padding:5px 0;}
+    @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
+  </style>
+</head>
+<body>
+  <header class="m-top">
+    <div class="m-brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
+      Bodhi Map <span class="count" id="count"></span>
+    </div>
+    <input id="search" class="m-search" type="text" placeholder="Search concepts…" autocomplete="off" autocapitalize="off" aria-label="Search concepts" />
+  </header>
+
+  <nav class="m-chips" id="chips" aria-label="Filter by cluster"></nav>
+  <main class="m-list" id="list"></main>
+  <div class="m-foot">Prefer the full graph? <a href="app.html?desktop=1">Open on desktop ↗</a> · <a href="docs/">Docs</a></div>
+
+  <div class="m-sheet" id="sheet" role="dialog" aria-modal="true">
+    <div class="m-backdrop"></div>
+    <div class="m-panel" id="panel"></div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script>
+    (function () {
+      var nodes = GRAPH.nodes, edges = GRAPH.edges;
+      var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
+      var relLabel = {}; Object.keys(RELATIONS).forEach(function (k) { relLabel[k] = RELATIONS[k].label; });
+      var REL = (typeof RELEASE !== 'undefined' && RELEASE) ? RELEASE.version : null;
+      var active = 'all', q = '';
+      function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
+
+      document.getElementById('count').textContent = nodes.length + ' concepts';
+
+      // cluster chips
+      var chipsEl = document.getElementById('chips');
+      var ch = '<button class="chip active" data-cluster="all">All</button>';
+      Object.keys(CLUSTERS).forEach(function (id) {
+        ch += '<button class="chip" data-cluster="' + id + '"><span class="dot" style="background:' + CLUSTERS[id].color + '"></span>' + esc(CLUSTERS[id].label) + '</button>';
+      });
+      chipsEl.innerHTML = ch;
+      chipsEl.addEventListener('click', function (e) {
+        var b = e.target.closest('.chip'); if (!b) return;
+        active = b.getAttribute('data-cluster');
+        chipsEl.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('active', c === b); });
+        render();
+      });
+
+      var searchEl = document.getElementById('search');
+      searchEl.addEventListener('input', function () { q = searchEl.value.trim().toLowerCase(); render(); });
+
+      var listEl = document.getElementById('list');
+      function matches(n) {
+        if (active !== 'all' && n.cluster !== active) return false;
+        if (q && (n.label + ' ' + n.summary).toLowerCase().indexOf(q) === -1) return false;
+        return true;
+      }
+      function card(n) {
+        var c = CLUSTERS[n.cluster] || { color: '#888' };
+        var isNew = REL && n.added === REL;
+        return '<div class="card" data-id="' + n.id + '" style="--c:' + c.color + '">' +
+          '<h3>' + esc(n.label) + (isNew ? ' <span class="newb">NEW</span>' : '') + '<span class="lvl">L' + n.level + '</span></h3>' +
+          '<p>' + esc(n.summary) + '</p></div>';
+      }
+      function render() {
+        var items = nodes.filter(matches);
+        if (!items.length) { listEl.innerHTML = '<div class="empty">No concepts match “' + esc(q) + '”.</div>'; return; }
+        var html = '';
+        if (active === 'all' && !q) {
+          Object.keys(CLUSTERS).forEach(function (cid) {
+            var g = items.filter(function (n) { return n.cluster === cid; });
+            if (!g.length) return;
+            html += '<div class="m-group-title">' + esc(CLUSTERS[cid].label) + ' · ' + g.length + '</div>';
+            g.forEach(function (n) { html += card(n); });
+          });
+        } else {
+          items.forEach(function (n) { html += card(n); });
+        }
+        listEl.innerHTML = html;
+      }
+      listEl.addEventListener('click', function (e) {
+        var c = e.target.closest('.card'); if (!c) return;
+        openSheet(c.getAttribute('data-id'));
+      });
+
+      // detail sheet
+      var sheet = document.getElementById('sheet'), panel = document.getElementById('panel');
+      function connsFor(id) {
+        var out = [];
+        edges.forEach(function (edge) {
+          if (edge.r === 'path') return;
+          if (edge.s === id && byId[edge.t]) out.push({ rel: relLabel[edge.r] || edge.r, to: byId[edge.t] });
+          else if (edge.t === id && byId[edge.s]) out.push({ rel: relLabel[edge.r] || edge.r, to: byId[edge.s], rev: true });
+        });
+        return out;
+      }
+      function openSheet(id) {
+        var n = byId[id]; if (!n) return;
+        var c = CLUSTERS[n.cluster] || { color: '#888', label: '' };
+        var isNew = REL && n.added === REL, conns = connsFor(id);
+        var html = '<button class="m-close" aria-label="Close">×</button><div class="m-grab"></div>' +
+          '<div class="m-tag" style="--c:' + c.color + '">' + esc(c.label) + ' · L' + n.level + ' — ' + esc(LEVELS[n.level] || '') + (isNew ? ' <span class="newb">NEW</span>' : '') + '</div>' +
+          '<h2>' + esc(n.label) + '</h2>' +
+          '<div class="m-sum" style="--c:' + c.color + '">' + esc(n.summary) + '</div>';
+        if (n.detail) html += '<div class="m-detail">' + esc(n.detail) + '</div>';
+        if (n.whenToUse) html += '<div class="m-h">When to use</div><div class="m-when">' + esc(n.whenToUse) + '</div>';
+        if (n.code) html += '<div class="m-h">Example</div><pre class="m-code">' + esc(n.code) + '</pre>';
+        if (conns.length) {
+          html += '<div class="m-h">Connections</div><div class="m-conns">';
+          conns.forEach(function (cn) {
+            var cc = CLUSTERS[cn.to.cluster] || { color: '#888' };
+            html += '<div class="m-conn" data-id="' + cn.to.id + '"><span class="dot" style="background:' + cc.color + '"></span><span class="rel">' + esc(cn.rel) + (cn.rev ? ' ←' : '') + '</span><span class="to">' + esc(cn.to.label) + '</span></div>';
+          });
+          html += '</div>';
+        }
+        if (n.refs && n.refs.length) {
+          html += '<div class="m-h">References</div><div class="m-refs">';
+          n.refs.forEach(function (r) { html += '<a href="' + esc(r.u) + '" target="_blank" rel="noopener">' + esc(r.t) + ' ↗</a>'; });
+          html += '</div>';
+        }
+        panel.innerHTML = html;
+        sheet.classList.add('open');
+        panel.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSheet() { sheet.classList.remove('open'); document.body.style.overflow = ''; }
+      sheet.addEventListener('click', function (e) {
+        if (e.target.classList.contains('m-backdrop') || e.target.classList.contains('m-close')) { closeSheet(); return; }
+        var conn = e.target.closest('.m-conn'); if (conn) openSheet(conn.getAttribute('data-id'));
+      });
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+
+      render();
+    })();
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () { navigator.serviceWorker.register('service-worker.js').catch(function () {}); });
+    }
+  </script>
+</body>
+</html>
