@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ai-first-community.github.io/Bodhi/"><img src="images/demo.gif" alt="Bodhi Map demo — explore the graph, open a concept and its connections, then build your own learning map" width="760"></a>
+  <a href="https://ai-first-community.github.io/Bodhi/"><img src="images/demo-explore.gif" alt="Bodhi Map demo — search a concept and explore its typed connections in the graph" width="760"></a>
 </p>
 
 <p align="center"><a href="https://ai-first-community.github.io/Bodhi/"><b>▶ Try the live app</b></a></p>
@@ -25,6 +25,20 @@ Fully **offline & self-contained** — no internet, no build step. Just open the
 
 > Open source — contributions welcome. Concepts are plain markdown in [`knowledge/`](knowledge/) (see [Editing / extending](#editing--extending)).
 > Created by **Sanjeev** · *Innovate with Sanjeev*.
+
+## See it in action
+
+**🧭 Which technique?** — a decision wizard that asks a few questions and recommends the right approach, then opens it in the graph.
+
+<p align="center"><img src="images/demo-wizard.gif" alt="Decision wizard recommending a technique" width="680"></p>
+
+**🗺️ Build your own learning map** — pick the topics you care about; the graph filters to your selection, saved on-device and shareable as a link.
+
+<p align="center"><img src="images/demo-mymap.gif" alt="Building a personalized learning map" width="680"></p>
+
+**📱 Works on mobile too** — a touch-native card view, installable as an app.
+
+<p align="center"><img src="images/demo-mobile.gif" alt="Mobile card view and concept detail sheet" width="300"></p>
 
 ## Why "Bodhi"? — motivation & philosophy
 
