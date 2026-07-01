@@ -19,6 +19,3 @@ tmp/
 
 # Test & generated artifacts
 scripts/screens/
-
-# Local AI working-guidance (kept out of the public repo)
-CLAUDE.md

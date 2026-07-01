@@ -43,6 +43,7 @@ exclude:
   - README.md
   - CONTRIBUTING.md
   - BACKLOG.md
+  - CLAUDE.md
   - LICENSE
   - flyer.html
   - flyer.pdf
