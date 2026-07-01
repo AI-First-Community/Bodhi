@@ -20,6 +20,8 @@
 
 The hard part of learning modern AI isn't finding definitions — it's seeing the **connections** between techniques: what improves on what, what to use when, how it all fits into a pipeline. **Bodhi Map** lays it out as one navigable graph — every technique a node, every relationship a typed edge — so you can see the whole landscape, pick a path, and go deep where you want.
 
+**Who's it for?** Anyone learning or building with modern AI — self-learners and students, engineers ramping into LLMs / fine-tuning / agents, and educators who want a shared map to point people at.
+
 **Find it useful?** [**⭐ Star it**](https://github.com/AI-First-Community/Bodhi) to help others find it, and [**contribute a concept**](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue) — adding one is just writing a Markdown file. Created by **Sanjeev** · *Innovate with Sanjeev*.
 
 ## See it in action
@@ -225,6 +227,12 @@ issue or PR — accurate attribution is part of the [quality bar](CONTRIBUTING.m
 | [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) (Google Cloud) | Knowledge bundle format | Apache-2.0 |
 | [Cytoscape.js](https://js.cytoscape.org/) + [fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) layout | Graph rendering & layout | MIT |
 | [Manrope](https://github.com/sharanda/manrope) | UI typeface (`fonts/`) | SIL OFL 1.1 |
+
+## Star history
+
+If Bodhi Map is useful to you, a ⭐ helps others discover it — thank you!
+
+<a href="https://star-history.com/#AI-First-Community/Bodhi&Date"><img src="https://api.star-history.com/svg?repos=AI-First-Community/Bodhi&type=Date" alt="Star History Chart" width="600"></a>
 
 ## License
 
