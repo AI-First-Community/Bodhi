@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ai-first-community.github.io/Bodhi/"><img src="images/demo-explore.gif" alt="Bodhi Map demo — search a concept and explore its typed connections in the graph" width="760"></a>
+  <a href="https://ai-first-community.github.io/Bodhi/"><img src="images/landing.gif" alt="Bodhi Map — an open, interactive knowledge graph of modern AI" width="820"></a>
 </p>
 
 <p align="center"><a href="https://ai-first-community.github.io/Bodhi/"><b>▶ Try the live app</b></a></p>
@@ -27,6 +27,10 @@ Fully **offline & self-contained** — no internet, no build step. Just open the
 > Created by **Sanjeev** · *Innovate with Sanjeev*.
 
 ## See it in action
+
+**🔍 Explore concepts and their connections** — search or click any node to see its typed relationships in the graph, plus a plain-language explainer, code, and sources.
+
+<p align="center"><img src="images/demo-explore.gif" alt="Exploring a concept and its connections in the graph" width="720"></p>
 
 **🧭 Which technique?** — a decision wizard that asks a few questions and recommends the right approach, then opens it in the graph.
 
