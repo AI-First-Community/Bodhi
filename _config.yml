@@ -33,6 +33,7 @@ defaults:
 # (Files listed here are not processed/copied by Jekyll; the app's index.html,
 #  app.html, js/, css/, fonts/, images/ are NOT excluded, so they ship as-is.)
 exclude:
+  - .github/
   - knowledge/
   - scripts/
   - node_modules/

@@ -1,0 +1,28 @@
+name: "✨ Feature idea"
+description: Suggest an improvement to the app, mobile view, or docs
+labels: ["feature"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it useful? Who does it help?
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Desktop graph app
+        - Mobile view
+        - PWA / offline / install
+        - Documentation
+        - Other
+    validations:
+      required: false

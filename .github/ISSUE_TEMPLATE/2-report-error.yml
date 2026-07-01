@@ -1,0 +1,28 @@
+name: "🛠 Report an error"
+description: A concept, source, fact, or link that's wrong or outdated
+labels: ["content", "correction"]
+body:
+  - type: markdown
+    attributes:
+      value: "Accuracy is the whole point — thank you for flagging this."
+  - type: input
+    id: concept
+    attributes:
+      label: Which concept (or page)?
+      placeholder: e.g. lora  ·  or a docs page / the app
+    validations:
+      required: true
+  - type: textarea
+    id: whats-wrong
+    attributes:
+      label: What's wrong?
+      description: Quote the incorrect/outdated text or describe the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Correct information + source
+      description: What should it say, and a source that backs it up.
+    validations:
+      required: true

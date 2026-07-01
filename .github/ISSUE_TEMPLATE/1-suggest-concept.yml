@@ -1,0 +1,53 @@
+name: "🌱 Suggest a concept"
+description: Propose a new AI concept to add to the map
+labels: ["content", "concept"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping grow the map! Every concept must be **accurate and backed by a real source**.
+        See [Concept Authoring](https://ai-first-community.github.io/Bodhi/docs/Concept-Authoring.html) for the format.
+  - type: input
+    id: name
+    attributes:
+      label: Concept name
+      placeholder: e.g. Speculative Decoding
+    validations:
+      required: true
+  - type: input
+    id: cluster
+    attributes:
+      label: Which cluster?
+      description: foundations · architecture · modeltypes · adaptation · peft · sft · alignment · reasoning · agents · efficiency · dataeval (or propose a new one)
+      placeholder: e.g. efficiency
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: One-line summary
+      description: The essence in a sentence (becomes the node summary).
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Source(s)
+      description: Link the paper / official blog / docs. At least one real, verifiable source is required.
+      placeholder: "https://arxiv.org/abs/..."
+    validations:
+      required: true
+  - type: textarea
+    id: relations
+    attributes:
+      label: How does it connect?
+      description: Which existing concepts does it improve on / combine with / build on / is an alternative to?
+    validations:
+      required: false
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it belongs
+      description: Why is this important enough to add?
+    validations:
+      required: false

@@ -77,12 +77,34 @@ current.
   duplicate ids, missing fields, cluster/relation validity, and bundle↔data sync.
 - **Stay offline.** No CDNs, no external fonts/scripts/icons. Icons are inline
   SVG; fonts are vendored in `fonts/`. Quick check:
-  `grep -rn 'http' app.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'`
+  `grep -rn 'http' app.html m.html css/style.css js/graph.js | grep -v 'w3.org/2000/svg'`
   (the `index.html` landing intentionally links out to GitHub/LinkedIn)
   should be empty.
 - **Cite a real source** for every concept (a paper, official blog, or docs).
 - **Be current and accurate** — prefer established techniques; mark genuinely new
   ones as such; verify claims against the source before adding.
+
+## How we work (self-managed)
+
+This is a community project — here's the lightweight, self-serve flow:
+
+1. **Find something to do.** Browse [open issues](https://github.com/AI-First-Community/Bodhi/issues)
+   — [`good first issue`](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue)
+   is the best place to start, and [`help wanted`](https://github.com/AI-First-Community/Bodhi/labels/help%20wanted)
+   are bigger, welcome tasks. The [BACKLOG](BACKLOG.md) has the broader roadmap.
+2. **Or propose something.** Open an issue via a template — *Suggest a concept*,
+   *Report an error*, or *Feature idea*. For open-ended questions, use **Discussions**.
+3. **Claim it.** Comment on the issue ("I'll take this") so others don't double up.
+4. **Do the work** on a branch of your fork (see [Quick start](#quick-start)).
+5. **Open a PR.** The PR template has a checklist — the important gates:
+   **`npm run build` passes with 0 errors**, every concept **cites a real source**
+   (no invented facts/URLs/numbers), the app **stays offline**, and the regenerated
+   `js/data.js` is committed. These aren't bureaucracy — Bodhi Map is live and in
+   public use, so *nothing should break and nothing should be inaccurate*.
+
+**Labels:** `content` (concepts), `feature`, `docs`, `bug`, `good first issue`,
+`help wanted`, `correction`. **Non-negotiables:** the validator must pass, sources
+must be real, and it must work offline.
 
 ## Submitting
 
