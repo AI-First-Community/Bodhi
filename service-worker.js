@@ -1,7 +1,7 @@
 /* Bodhi Map — service worker (offline + installable PWA).
    Precaches the app shell so it works offline after install; runtime-caches
    everything else same-origin (cache-first). Bump CACHE to invalidate. */
-const CACHE = 'bodhi-v0.4.3';
+const CACHE = 'bodhi-v0.4.4';
 const PRECACHE = [
   './', './index.html', './app.html', './m.html',
   './css/style.css',

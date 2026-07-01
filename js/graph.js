@@ -843,14 +843,84 @@
   }
   function applyHash() {
     const h = decodeURIComponent((location.hash || '').replace(/^#/, ''));
-    const m = h.match(/^(concept|compare)=(.+)$/);
+    const m = h.match(/^(concept|compare|map)=(.+)$/);
     if (!m) return;
     suppressHash = true;
     if (m[1] === 'concept' && nodeById[m[2]]) focusNode(m[2]);
     else if (m[1] === 'compare') { const i = comparisons.findIndex((c) => c.id === m[2]); if (i !== -1) openCompare(i); }
+    else if (m[1] === 'map') applyMap(m[2].split(','), { hash: false });
     suppressHash = false;
   }
   window.addEventListener('hashchange', applyHash);
+
+  // ---- My Map: build your own learning map (pick topics -> saved + shareable) -
+  const mapModal = document.getElementById('mapModal');
+  const mapCard = document.getElementById('mapCard');
+  const mapBtn = document.getElementById('mapBtn');
+  const ALL_CLUSTERS = Object.keys(CLUSTERS);
+  function syncLegend() {
+    document.querySelectorAll('#legend .legend-item').forEach((item) => {
+      const cid = item.getAttribute('data-cluster');
+      const off = !activeClusters.has(cid);
+      item.classList.toggle('off', off);
+      const b = item.querySelector('.legend-toggle'); if (b) b.setAttribute('aria-pressed', String(!off));
+    });
+  }
+  function applyMap(clusters, opts) {
+    opts = opts || {};
+    const set = new Set((clusters || []).filter((c) => CLUSTERS[c]));
+    if (!set.size) return;
+    activeClusters.clear();
+    ALL_CLUSTERS.forEach((c) => { if (set.has(c)) activeClusters.add(c); });
+    syncLegend(); applyFilters();
+    if (opts.save !== false) { try { localStorage.setItem('bodhi-mymap', [...set].join(',')); } catch (e) {} }
+    if (opts.hash !== false) updateHash('map=' + [...set].join(','));
+    if (opts.fit !== false) { const vis = cy.nodes('[!isCluster]').filter((n) => set.has(n.data('cluster'))); if (vis.length) cy.animate({ fit: { eles: vis, padding: 55 } }, { duration: 450 }); }
+  }
+  function clearMap() {
+    activeClusters.clear(); ALL_CLUSTERS.forEach((c) => activeClusters.add(c));
+    syncLegend(); applyFilters();
+    try { localStorage.removeItem('bodhi-mymap'); } catch (e) {}
+    updateHash('');
+  }
+  function copyMapLink(sel) {
+    const url = location.origin + location.pathname + '#map=' + sel.join(',');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(() => toast('Map link copied')).catch(() => prompt('Copy your map link:', url));
+    else prompt('Copy your map link:', url);
+  }
+  function selectedInMap() { return [...mapCard.querySelectorAll('input:checked')].map((i) => i.value); }
+  function openMap() {
+    let saved = [];
+    try { const s = localStorage.getItem('bodhi-mymap'); if (s) saved = s.split(','); } catch (e) {}
+    const isOn = (c) => saved.length ? saved.indexOf(c) !== -1 : activeClusters.has(c);
+    const rows = ALL_CLUSTERS.map((c) => {
+      const cl = CLUSTERS[c], cnt = GRAPH.nodes.filter((n) => n.cluster === c).length;
+      return '<label class="mm-row"><input type="checkbox" value="' + c + '"' + (isOn(c) ? ' checked' : '') + '><span class="mm-dot" style="background:' + cl.color + '"></span><span class="mm-name">' + cl.label + '</span><span class="mm-cnt">' + cnt + '</span></label>';
+    }).join('');
+    mapCard.innerHTML =
+      '<button class="mm-close" id="mmClose" aria-label="Close">×</button>' +
+      '<h2 class="mm-title">★ Build your learning map</h2>' +
+      '<p class="mm-sub">Pick the topics you want to focus on — the graph filters to just your selection. Your map is saved on this device and shareable as a link.</p>' +
+      '<div class="mm-list">' + rows + '</div>' +
+      '<div class="mm-actions"><button class="btn ghost" id="mmClear" type="button">Clear</button><button class="btn ghost" id="mmShare" type="button">🔗 Share</button><button class="btn primary" id="mmSave" type="button">Save &amp; view</button></div>';
+    mapModal.classList.add('open');
+  }
+  function closeMap() { mapModal.classList.remove('open'); }
+  if (mapBtn) mapBtn.onclick = openMap;
+  mapModal.onclick = (e) => {
+    if (e.target === mapModal || e.target.id === 'mmClose') { closeMap(); return; }
+    if (e.target.id === 'mmSave') {
+      const sel = selectedInMap();
+      if (!sel.length) { toast('Pick at least one topic'); return; }
+      applyMap(sel); closeMap(); toast('Saved your map');
+    } else if (e.target.id === 'mmShare') {
+      const sel = selectedInMap();
+      if (!sel.length) { toast('Pick at least one topic'); return; }
+      copyMapLink(sel);
+    } else if (e.target.id === 'mmClear') {
+      clearMap(); closeMap(); toast('Map cleared');
+    }
+  };
 
   // ---- Toolbar buttons -------------------------------------------------------
   document.getElementById('fitBtn').onclick = () => cy.animate({ fit: { padding: 60 } }, { duration: 350 });
@@ -923,7 +993,7 @@
 
   // keyboard
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closePanel(); endGuided(); endDecision(); closeCompare(); closeWelcome(); searchResults.classList.remove('open'); }
+    if (e.key === 'Escape') { closePanel(); endGuided(); endDecision(); closeCompare(); closeWelcome(); closeMap(); searchResults.classList.remove('open'); }
     if (document.activeElement === searchInput) return;
     if (e.key === 'f') { searchInput.focus(); e.preventDefault(); }
     if (e.key === 't') { setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
@@ -931,8 +1001,10 @@
     if (e.key === 'm') { toggleMini(); }
   });
 
-  // restore state from a shared deep link (#concept=... / #compare=...)
+  // restore state from a shared deep link (#concept=... / #compare=... / #map=...)
   applyHash();
+  // restore a saved "My Map" topic filter when not arriving via a deep link
+  if (!location.hash) { try { const svMap = localStorage.getItem('bodhi-mymap'); if (svMap) applyMap(svMap.split(','), { save: false, hash: false, fit: false }); } catch (e) {} }
   // first-visit onboarding (skipped when arriving via a shared deep link)
   maybeShowWelcome();
 
