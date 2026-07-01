@@ -85,14 +85,37 @@
     .m-conn .to{font-weight:600;color:var(--ink);}
     .m-refs a{display:block;color:var(--green);text-decoration:none;font-size:13px;padding:5px 0;}
     @media (prefers-reduced-motion:reduce){ *{animation:none!important} }
+    /* My Map (personalization) */
+    .m-toprow{ display:flex; align-items:center; gap:10px; }
+    .m-custom{ margin-left:auto; flex:0 0 auto; display:inline-flex; align-items:center; gap:5px; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:12.5px; font-weight:700; font-family:inherit; cursor:pointer; white-space:nowrap; }
+    .m-custom.on{ border-color:var(--green); color:var(--green); }
+    .m-brand .count{ margin-left:7px; }
+    .m-pick{ display:flex; flex-direction:column; gap:9px; }
+    .m-pick label{ display:flex; align-items:center; gap:11px; padding:11px 13px; border:1px solid var(--line); border-radius:12px; background:var(--card); font-size:14px; cursor:pointer; }
+    .m-pick input{ width:20px; height:20px; accent-color:var(--green); flex:0 0 auto; }
+    .m-pick .dot{ width:11px; height:11px; border-radius:3px; flex:0 0 auto; }
+    .m-pick .pc{ flex:1; font-weight:600; }
+    .m-pick .pn{ font-size:11px; color:var(--muted); }
+    .m-actions{ display:flex; gap:10px; margin-top:16px; }
+    .m-btn{ flex:1; padding:13px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:14px; font-weight:700; font-family:inherit; cursor:pointer; }
+    .m-btn.primary{ background:linear-gradient(180deg,var(--green),var(--green-deep)); color:#06250f; border:0; }
+    .m-hint{ font-size:12.5px; color:var(--muted); margin-top:12px; text-align:center; }
+    .m-hint a{ color:var(--green); }
+    .m-path-note{ font-size:12.5px; line-height:1.5; color:var(--muted); background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 13px; margin:2px 0 14px; }
+    .m-path-note a{ color:var(--green); text-decoration:none; font-weight:700; }
+    .m-toast{ position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(10px); background:#0f1c16; border:1px solid var(--line); color:var(--ink); padding:10px 16px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; }
+    .m-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
   <header class="m-top">
-    <a class="m-brand" href="index.html" aria-label="Bodhi Map — back to home">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
-      Bodhi Map <span class="count" id="count"></span>
-    </a>
+    <div class="m-toprow">
+      <a class="m-brand" href="index.html" aria-label="Bodhi Map — back to home">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.2C10.4 4.5 6.7 4.6 5.1 7.6 3.3 10.9 5.7 15.9 12 22c6.3-6.1 8.7-11.1 6.9-14.4C17.3 4.6 13.6 4.5 12 6.2Z" fill="currentColor"/></svg>
+        Bodhi Map <span class="count" id="count"></span>
+      </a>
+      <button class="m-custom" id="customize" type="button" aria-label="Build your learning map">★ Build map</button>
+    </div>
     <input id="search" class="m-search" type="text" placeholder="Search concepts…" autocomplete="off" autocapitalize="off" aria-label="Search concepts" />
   </header>
 
@@ -105,6 +128,11 @@
     <div class="m-panel" id="panel"></div>
   </div>
 
+  <div class="m-sheet" id="pickSheet" role="dialog" aria-modal="true" aria-label="Build your learning map">
+    <div class="m-backdrop"></div>
+    <div class="m-panel" id="pickPanel"></div>
+  </div>
+
   <script src="js/data.js"></script>
   <script>
     (function () {
@@ -112,31 +140,95 @@
       var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
       var relLabel = {}; Object.keys(RELATIONS).forEach(function (k) { relLabel[k] = RELATIONS[k].label; });
       var REL = (typeof RELEASE !== 'undefined' && RELEASE) ? RELEASE.version : null;
-      var active = 'all', q = '';
+      var active = 'all', q = '', myMap = [];
       function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
 
       document.getElementById('count').textContent = nodes.length + ' concepts';
 
-      // cluster chips
+      // cluster chips (rebuilt when My Map changes)
       var chipsEl = document.getElementById('chips');
-      var ch = '<button class="chip active" data-cluster="all">All</button>';
-      Object.keys(CLUSTERS).forEach(function (id) {
-        ch += '<button class="chip" data-cluster="' + id + '"><span class="dot" style="background:' + CLUSTERS[id].color + '"></span>' + esc(CLUSTERS[id].label) + '</button>';
-      });
-      chipsEl.innerHTML = ch;
+      function buildChips() {
+        var ch = '';
+        if (myMap.length) ch += '<button class="chip' + (active === 'mymap' ? ' active' : '') + '" data-cluster="mymap">★ My Map</button>';
+        ch += '<button class="chip' + (active === 'all' ? ' active' : '') + '" data-cluster="all">All</button>';
+        Object.keys(CLUSTERS).forEach(function (id) {
+          ch += '<button class="chip' + (active === id ? ' active' : '') + '" data-cluster="' + id + '"><span class="dot" style="background:' + CLUSTERS[id].color + '"></span>' + esc(CLUSTERS[id].label) + '</button>';
+        });
+        chipsEl.innerHTML = ch;
+      }
       chipsEl.addEventListener('click', function (e) {
         var b = e.target.closest('.chip'); if (!b) return;
         active = b.getAttribute('data-cluster');
-        chipsEl.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('active', c === b); });
-        render();
+        buildChips(); updateCustomBtn(); render();
       });
 
       var searchEl = document.getElementById('search');
       searchEl.addEventListener('input', function () { q = searchEl.value.trim().toLowerCase(); render(); });
 
+      // ---- My Map: personalized learning map (topics -> saved, shareable path) ----
+      var customBtn = document.getElementById('customize');
+      var pickSheet = document.getElementById('pickSheet'), pickPanel = document.getElementById('pickPanel');
+      function updateCustomBtn() {
+        customBtn.textContent = myMap.length ? '★ My Map' : '★ Build map';
+        customBtn.classList.toggle('on', active === 'mymap');
+      }
+      function setMyMap(arr) {
+        var seen = {}; myMap = arr.filter(function (id) { if (!CLUSTERS[id] || seen[id]) return false; seen[id] = 1; return true; });
+        try { if (myMap.length) localStorage.setItem('bodhi-mymap', myMap.join(',')); else localStorage.removeItem('bodhi-mymap'); } catch (e) {}
+      }
+      function toast(msg) {
+        var t = document.getElementById('mtoast');
+        if (!t) { t = document.createElement('div'); t.id = 'mtoast'; t.className = 'm-toast'; document.body.appendChild(t); }
+        t.textContent = msg; t.classList.add('show');
+        clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('show'); }, 1800);
+      }
+      function shareMap(sel) {
+        sel = (sel && sel.length) ? sel : myMap;
+        var url = location.origin + location.pathname + (sel.length ? '#map=' + sel.join(',') : '');
+        if (navigator.share) { navigator.share({ title: 'My Bodhi Map', text: 'My AI learning map', url: url }).catch(function () {}); }
+        else if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(function () { toast('Link copied'); }).catch(function () { prompt('Copy your map link:', url); }); }
+        else { prompt('Copy your map link:', url); }
+      }
+      function openPicker() {
+        var checks = Object.keys(CLUSTERS).map(function (id) {
+          var c = CLUSTERS[id], on = myMap.indexOf(id) !== -1;
+          var cnt = nodes.filter(function (n) { return n.cluster === id; }).length;
+          return '<label><input type="checkbox" value="' + id + '"' + (on ? ' checked' : '') + '><span class="dot" style="background:' + c.color + '"></span><span class="pc">' + esc(c.label) + '</span><span class="pn">' + cnt + '</span></label>';
+        }).join('');
+        pickPanel.innerHTML =
+          '<div class="m-head"><div class="m-grab"></div><button class="m-close" aria-label="Close">×</button>' +
+          '<div class="m-tag" style="--c:var(--green)">Build your learning map</div><h2>Pick your topics</h2></div>' +
+          '<div class="m-body"><div class="m-path-note">Choose the clusters you want to focus on. Your map is saved on this device and shareable as a link.</div>' +
+          '<div class="m-pick">' + checks + '</div>' +
+          '<div class="m-actions"><button class="m-btn" id="pkShare" type="button">🔗 Share</button><button class="m-btn primary" id="pkSave" type="button">Save &amp; view</button></div>' +
+          (myMap.length ? '<div class="m-hint"><a href="#" id="pkClear">Clear my map</a></div>' : '') +
+          '</div>';
+        pickSheet.classList.add('open'); pickPanel.scrollTop = 0; document.body.style.overflow = 'hidden';
+      }
+      function closePicker() { pickSheet.classList.remove('open'); document.body.style.overflow = ''; }
+      function selectedInPicker() { return [].slice.call(pickPanel.querySelectorAll('input:checked')).map(function (i) { return i.value; }); }
+      customBtn.addEventListener('click', openPicker);
+      pickSheet.addEventListener('click', function (e) {
+        if (e.target.classList.contains('m-backdrop') || e.target.classList.contains('m-close')) { closePicker(); return; }
+        var id = e.target.id;
+        if (id === 'pkSave') {
+          setMyMap(selectedInPicker()); closePicker();
+          active = myMap.length ? 'mymap' : 'all';
+          buildChips(); updateCustomBtn(); render();
+          if (myMap.length) toast('Saved your map');
+        } else if (id === 'pkShare') {
+          var s = selectedInPicker();
+          if (!s.length) { toast('Pick at least one topic first'); return; }
+          shareMap(s);
+        } else if (id === 'pkClear') {
+          e.preventDefault(); setMyMap([]); closePicker(); active = 'all'; buildChips(); updateCustomBtn(); render();
+        }
+      });
+
       var listEl = document.getElementById('list');
       function matches(n) {
-        if (active !== 'all' && n.cluster !== active) return false;
+        if (active === 'mymap') { if (myMap.indexOf(n.cluster) === -1) return false; }
+        else if (active !== 'all' && n.cluster !== active) return false;
         if (q && (n.label + ' ' + n.summary).toLowerCase().indexOf(q) === -1) return false;
         return true;
       }
@@ -151,7 +243,15 @@
         var items = nodes.filter(matches);
         if (!items.length) { listEl.innerHTML = '<div class="empty">No concepts match “' + esc(q) + '”.</div>'; return; }
         var html = '';
-        if (active === 'all' && !q) {
+        if (active === 'mymap' && !q) {
+          html += '<div class="m-path-note">Your map · ' + myMap.length + ' topics · ' + items.length + ' concepts, ordered <b>foundations → advanced</b>. <a href="#" id="editmap">Edit</a> · <a href="#" id="sharemap">Share</a></div>';
+          Object.keys(LEVELS).forEach(function (lvl) {
+            var g = items.filter(function (n) { return String(n.level) === String(lvl); });
+            if (!g.length) return;
+            html += '<div class="m-group-title">Level ' + lvl + ' · ' + esc(LEVELS[lvl]) + '</div>';
+            g.forEach(function (n) { html += card(n); });
+          });
+        } else if (active === 'all' && !q) {
           Object.keys(CLUSTERS).forEach(function (cid) {
             var g = items.filter(function (n) { return n.cluster === cid; });
             if (!g.length) return;
@@ -164,6 +264,8 @@
         listEl.innerHTML = html;
       }
       listEl.addEventListener('click', function (e) {
+        if (e.target.id === 'editmap') { e.preventDefault(); openPicker(); return; }
+        if (e.target.id === 'sharemap') { e.preventDefault(); shareMap(myMap); return; }
         var c = e.target.closest('.card'); if (!c) return;
         openSheet(c.getAttribute('data-id'));
       });
@@ -214,8 +316,13 @@
         if (e.target.classList.contains('m-backdrop') || e.target.classList.contains('m-close')) { closeSheet(); return; }
         var conn = e.target.closest('.m-conn'); if (conn) openSheet(conn.getAttribute('data-id'));
       });
-      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeSheet(); closePicker(); } });
 
+      // init My Map from a shared link (#map=cluster,cluster) or saved preference
+      var hm = (location.hash.match(/map=([^&]+)/) || [])[1];
+      if (hm) { setMyMap(decodeURIComponent(hm).split(',')); active = myMap.length ? 'mymap' : 'all'; }
+      else { try { var sv = localStorage.getItem('bodhi-mymap'); if (sv) myMap = sv.split(',').filter(function (id) { return CLUSTERS[id]; }); } catch (e) {} }
+      buildChips(); updateCustomBtn();
       render();
     })();
   </script>
