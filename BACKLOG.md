@@ -1,8 +1,15 @@
 # Bodhi Map — Backlog & Roadmap 🍃
 
 A living list of what's next. Not a commitment — priorities shift with feedback and
-contributions. Have an idea or want to pick something up? Open an
-[issue or PR](https://github.com/AI-First-Community/Bodhi/issues).
+contributions.
+
+**Want to contribute?** Items below are tracked as
+[GitHub issues](https://github.com/AI-First-Community/Bodhi/issues) — grab a
+[`good first issue`](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue)
+or a [`help wanted`](https://github.com/AI-First-Community/Bodhi/labels/help%20wanted),
+comment to claim it, and open a PR. New idea? Open an issue via a template, or start a
+[Discussion](https://github.com/AI-First-Community/Bodhi/discussions). See
+[CONTRIBUTING → How we work](CONTRIBUTING.md#how-we-work-self-managed).
 
 **Legend:** 🔲 open · ✅ done · ⏸ parked · ➖ ongoing
 
