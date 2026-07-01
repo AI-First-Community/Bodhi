@@ -60,14 +60,16 @@
     .m-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58);}
     .m-panel{position:absolute;left:0;right:0;bottom:0;max-height:90vh;overflow-y:auto;
       background:var(--bg2);border-radius:20px 20px 0 0;border-top:1px solid var(--line);
-      padding:8px 18px calc(34px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.7,.2,1);}
+      padding:0 18px calc(34px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.7,.2,1);}
     @keyframes up{from{transform:translateY(34px);opacity:.5}to{transform:none;opacity:1}}
-    .m-close{position:sticky;top:6px;float:right;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
-      background:var(--bg2);color:var(--ink);font-size:19px;line-height:1;cursor:pointer;}
-    .m-grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:8px auto 14px;}
+    .m-head{position:sticky;top:0;z-index:3;background:var(--bg2);margin:0 -18px;padding:8px 18px 11px;border-bottom:1px solid var(--line);}
+    .m-body{padding-top:14px;}
+    .m-close{float:right;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
+      background:var(--card);color:var(--ink);font-size:19px;line-height:1;cursor:pointer;}
+    .m-grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:2px auto 12px;}
     .m-tag{font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--c,var(--green));
       display:flex;align-items:center;gap:8px;flex-wrap:wrap;clear:both;}
-    .m-panel h2{font-size:24px;font-weight:800;margin:9px 0 10px;letter-spacing:-.015em;line-height:1.1;}
+    .m-panel h2{font-size:23px;font-weight:800;margin:8px 0 0;letter-spacing:-.015em;line-height:1.15;}
     .m-sum{font-size:15px;line-height:1.55;color:var(--ink);border-left:3px solid var(--c,var(--green));padding-left:13px;}
     .m-detail{margin-top:14px;font-size:14px;line-height:1.65;color:var(--muted);}
     .m-h{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:800;margin:20px 0 8px;}
@@ -181,10 +183,10 @@
         var n = byId[id]; if (!n) return;
         var c = CLUSTERS[n.cluster] || { color: '#888', label: '' };
         var isNew = REL && n.added === REL, conns = connsFor(id);
-        var html = '<button class="m-close" aria-label="Close">×</button><div class="m-grab"></div>' +
+        var html = '<div class="m-head"><div class="m-grab"></div><button class="m-close" aria-label="Close">×</button>' +
           '<div class="m-tag" style="--c:' + c.color + '">' + esc(c.label) + ' · L' + n.level + ' — ' + esc(LEVELS[n.level] || '') + (isNew ? ' <span class="newb">NEW</span>' : '') + '</div>' +
-          '<h2>' + esc(n.label) + '</h2>' +
-          '<div class="m-sum" style="--c:' + c.color + '">' + esc(n.summary) + '</div>';
+          '<h2>' + esc(n.label) + '</h2></div>' +
+          '<div class="m-body"><div class="m-sum" style="--c:' + c.color + '">' + esc(n.summary) + '</div>';
         if (n.detail) html += '<div class="m-detail">' + esc(n.detail) + '</div>';
         if (n.whenToUse) html += '<div class="m-h">When to use</div><div class="m-when">' + esc(n.whenToUse) + '</div>';
         if (n.code) html += '<div class="m-h">Example</div><pre class="m-code">' + esc(n.code) + '</pre>';
@@ -201,9 +203,10 @@
           n.refs.forEach(function (r) { html += '<a href="' + esc(r.u) + '" target="_blank" rel="noopener">' + esc(r.t) + ' ↗</a>'; });
           html += '</div>';
         }
+        html += '</div>';
         panel.innerHTML = html;
         sheet.classList.add('open');
-        panel.scrollTop = 0;
+        requestAnimationFrame(function () { panel.scrollTop = 0; });
         document.body.style.overflow = 'hidden';
       }
       function closeSheet() { sheet.classList.remove('open'); document.body.style.overflow = ''; }
