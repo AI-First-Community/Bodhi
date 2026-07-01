@@ -42,6 +42,7 @@ exclude:
   - package-lock.json
   - README.md
   - CONTRIBUTING.md
+  - BACKLOG.md
   - LICENSE
   - flyer.html
   - flyer.pdf
