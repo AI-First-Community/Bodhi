@@ -30,7 +30,12 @@ Fully **offline & self-contained** — no internet, no build step. Just open the
 
 **🔍 Explore concepts and their connections** — search or click any node to see its typed relationships in the graph, plus a plain-language explainer, code, and sources.
 
-<p align="center"><img src="images/demo-explore.gif" alt="Exploring a concept and its connections in the graph" width="720"></p>
+<p align="center"><img src="images/demo-explore.gif" alt="Exploring a concept and its connections in the graph" width="740"></p>
+
+<details>
+<summary><b>▶ More demos</b> — decision wizard · build-your-own-map · compare · guided path · mobile</summary>
+
+<br>
 
 **🧭 Which technique?** — a decision wizard that asks a few questions and recommends the right approach, then opens it in the graph.
 
@@ -40,9 +45,19 @@ Fully **offline & self-contained** — no internet, no build step. Just open the
 
 <p align="center"><img src="images/demo-mymap.gif" alt="Building a personalized learning map" width="680"></p>
 
+**⚖️ Compare** — side-by-side matrices for the families you actually have to choose between (PEFT · preference optimization · attention variants · …).
+
+<p align="center"><img src="images/demo-compare.gif" alt="Side-by-side comparison tables" width="680"></p>
+
+**▶ Guided Path** — an animated walkthrough of a real workflow: base model → SFT → LoRA → DPO → eval → quantize.
+
+<p align="center"><img src="images/demo-guided.gif" alt="Guided path walkthrough" width="680"></p>
+
 **📱 Works on mobile too** — a touch-native card view, installable as an app.
 
 <p align="center"><img src="images/demo-mobile.gif" alt="Mobile card view and concept detail sheet" width="300"></p>
+
+</details>
 
 ## Why "Bodhi"? — motivation & philosophy
 
