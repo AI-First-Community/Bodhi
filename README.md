@@ -43,6 +43,18 @@ open index.html          # the landing page — then click "Enter the map"
 # or open app.html directly for the interactive graph
 ```
 
+## 📱 Install as an app (PWA)
+
+Bodhi Map is an installable **Progressive Web App** — it works offline and adds to your home screen / dock like a native app, on desktop **or** mobile.
+
+- **Desktop:** open the [live site](https://ai-first-community.github.io/Bodhi/) → click the install icon in the address bar (or browser menu → *Install Bodhi Map*).
+- **Mobile:** open the site → *Share → Add to Home Screen* (iOS) or the *Install app* prompt (Android).
+- **Or scan to open on your phone:**
+
+  <img src="images/qr-bodhi.gif" alt="QR code — scan to open Bodhi Map" width="180" height="180" />
+
+Once installed it launches full-screen and works with no internet connection.
+
 ## Features
 
 - **Graph view** — 123 concepts across 11 clusters (Foundations · Architecture · Model Archetypes · Adaptation Spectrum · PEFT · SFT/Instruction · Alignment/Preference · Reasoning & Test-Time · Agents & Retrieval · Efficiency & Infra · Data & Evaluation), color-coded, with typed edges (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`). Force-directed `fcose` layout with clean cluster separation.
