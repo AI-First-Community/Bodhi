@@ -16,15 +16,11 @@
 
 <p align="center"><a href="https://ai-first-community.github.io/Bodhi/"><b>▶ Try the live app</b></a></p>
 
-> **123 concepts · 11 clusters · fully offline · zero dependencies.**
-> Understand AI from tokens and attention all the way to LoRA, DPO, reasoning models, agents, and quantization — every concept a node, every connection an edge.
+> **123 concepts · 11 clusters · fully offline · zero dependencies · MIT-licensed.**
 
-**Find it useful?** [**⭐ Star the repo**](https://github.com/AI-First-Community/Bodhi) to help others discover it, and [**contribute a concept**](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue) — adding one is just writing a Markdown file.
+The hard part of learning modern AI isn't finding definitions — it's seeing the **connections** between techniques: what improves on what, what to use when, how it all fits into a pipeline. **Bodhi Map** lays it out as one navigable graph — every technique a node, every relationship a typed edge — so you can see the whole landscape, pick a path, and go deep where you want.
 
-Fully **offline & self-contained** — no internet, no build step. Just open the [live app](https://ai-first-community.github.io/Bodhi/) or `index.html` locally.
-
-> Open source — contributions welcome. Concepts are plain markdown in [`knowledge/`](knowledge/) (see [Editing / extending](#editing--extending)).
-> Created by **Sanjeev** · *Innovate with Sanjeev*.
+**Find it useful?** [**⭐ Star it**](https://github.com/AI-First-Community/Bodhi) to help others find it, and [**contribute a concept**](https://github.com/AI-First-Community/Bodhi/labels/good%20first%20issue) — adding one is just writing a Markdown file. Created by **Sanjeev** · *Innovate with Sanjeev*.
 
 ## See it in action
 
