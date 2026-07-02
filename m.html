@@ -40,6 +40,10 @@
       font-family:inherit;cursor:pointer;white-space:nowrap;}
     .chip .dot{width:9px;height:9px;border-radius:3px;}
     .chip.active{background:var(--card);color:var(--ink);border-color:var(--green);}
+    .m-levels{display:flex;gap:7px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none;}
+    .m-levels::-webkit-scrollbar{display:none}
+    .lchip{flex:0 0 auto;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;}
+    .lchip.active{background:var(--card);color:var(--ink);border-color:var(--green);}
     .m-list{padding:4px 16px 40px;display:flex;flex-direction:column;gap:10px;}
     .m-group-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);
       font-weight:800;margin:16px 2px 3px;}
@@ -120,6 +124,7 @@
   </header>
 
   <nav class="m-chips" id="chips" aria-label="Filter by cluster"></nav>
+  <nav class="m-levels" id="levels" aria-label="Filter by level"></nav>
   <main class="m-list" id="list"></main>
   <div class="m-foot">Prefer the full graph? <a href="app.html?desktop=1">Open on desktop ↗</a> · <a href="docs/">Docs</a></div>
 
@@ -140,7 +145,7 @@
       var byId = {}; nodes.forEach(function (n) { byId[n.id] = n; });
       var relLabel = {}; Object.keys(RELATIONS).forEach(function (k) { relLabel[k] = RELATIONS[k].label; });
       var REL = (typeof RELEASE !== 'undefined' && RELEASE) ? RELEASE.version : null;
-      var active = 'all', q = '', myMap = [];
+      var active = 'all', q = '', myMap = [], activeLevel = null;
       function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
 
       document.getElementById('count').textContent = nodes.length + ' concepts';
@@ -164,6 +169,22 @@
 
       var searchEl = document.getElementById('search');
       searchEl.addEventListener('input', function () { q = searchEl.value.trim().toLowerCase(); render(); });
+
+      // level (1–5) filter
+      var levelsEl = document.getElementById('levels');
+      function buildLevels() {
+        var lv = '<button class="lchip' + (activeLevel === null ? ' active' : '') + '" data-level="all">All levels</button>';
+        Object.keys(LEVELS).forEach(function (l) {
+          lv += '<button class="lchip' + (String(activeLevel) === l ? ' active' : '') + '" data-level="' + l + '" title="' + esc(LEVELS[l]) + '">L' + l + '</button>';
+        });
+        levelsEl.innerHTML = lv;
+      }
+      levelsEl.addEventListener('click', function (e) {
+        var b = e.target.closest('.lchip'); if (!b) return;
+        var v = b.getAttribute('data-level');
+        activeLevel = (v === 'all') ? null : parseInt(v, 10);
+        buildLevels(); render();
+      });
 
       // ---- My Map: personalized learning map (topics -> saved, shareable path) ----
       var customBtn = document.getElementById('customize');
@@ -229,6 +250,7 @@
       function matches(n) {
         if (active === 'mymap') { if (myMap.indexOf(n.cluster) === -1) return false; }
         else if (active !== 'all' && n.cluster !== active) return false;
+        if (activeLevel !== null && n.level !== activeLevel) return false;
         if (q && (n.label + ' ' + n.summary).toLowerCase().indexOf(q) === -1) return false;
         return true;
       }
@@ -322,15 +344,11 @@
       var hm = (location.hash.match(/map=([^&]+)/) || [])[1];
       if (hm) { setMyMap(decodeURIComponent(hm).split(',')); active = myMap.length ? 'mymap' : 'all'; }
       else { try { var sv = localStorage.getItem('bodhi-mymap'); if (sv) myMap = sv.split(',').filter(function (id) { return CLUSTERS[id]; }); } catch (e) {} }
-      buildChips(); updateCustomBtn();
+      buildChips(); buildLevels(); updateCustomBtn();
       render();
     })();
   </script>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () { navigator.serviceWorker.register('service-worker.js').catch(function () {}); });
-    }
-  </script>
+  <script src="js/sw-register.js"></script>
 </body>
 </html>

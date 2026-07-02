@@ -1,14 +1,14 @@
 /* Bodhi Map — service worker (offline + installable PWA).
    Precaches the app shell so it works offline after install; runtime-caches
    everything else same-origin (cache-first). Bump CACHE to invalidate. */
-const CACHE = 'bodhi-v0.5.0';
+const CACHE = 'bodhi-v0.5.1';
 const PRECACHE = [
   './', './index.html', './app.html', './m.html',
   './css/style.css',
   './js/cytoscape.min.js', './js/layout-base.js', './js/cose-base.js', './js/cytoscape-fcose.js',
-  './js/data.js', './js/graph.js',
+  './js/data.js', './js/graph.js', './js/sw-register.js',
   './manifest.json',
-  './icons/icon-192.png', './icons/icon-512.png',
+  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png',
   './fonts/manrope-400.woff2', './fonts/manrope-500.woff2', './fonts/manrope-600.woff2',
   './fonts/manrope-700.woff2', './fonts/manrope-800.woff2',
   './images/bodhi-tree.png'
