@@ -7,6 +7,14 @@ nav_order: 10
 
 Notable changes per release. The in-app **New** chip always reflects the current release's additions (see [Release Process](Release-Process.md)).
 
+## Unreleased (since v0.5.0)
+
+Incremental improvements shipped on top of the v0.5.0 tag (no new concepts):
+
+- **Mobile parity** — the touch view (`m.html`) gained the **🧭 Which technique?** wizard, the **▶ Guided Path** stepper, and the **⚖️ Compare** tables, matching the desktop tools.
+- **Update prompt** — a "new version available → reload" banner so installed PWAs pick up fresh builds.
+- **Version tag** — the current release label is shown, tiny, in the app.
+
 ## v0.5.0
 
 **Content** — 123 → **128 concepts**, **240 edges**. New **Multimodal** cluster (broadening scope from LLMs toward AI):

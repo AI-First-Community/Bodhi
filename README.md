@@ -51,7 +51,7 @@ The hard part of learning modern AI isn't finding definitions — it's seeing th
 
 <p align="center"><img src="images/demo-guided.gif" alt="Guided path walkthrough" width="680"></p>
 
-**📱 Works on mobile too** — a touch-native card view, installable as an app.
+**📱 Works on mobile too** — a touch-native card view with the same interactive tools (wizard, guided path, compare, build-your-own-map), installable as an app.
 
 <p align="center"><img src="images/demo-mobile.gif" alt="Mobile card view and concept detail sheet" width="300"></p>
 
@@ -67,7 +67,7 @@ The hard part of learning modern AI isn't finding definitions — it's seeing th
 - **🗺️ Build your own learning map** — pick your topics → a personalized, saved, shareable view.
 - **⬇️ For agents** — one-click export of the whole knowledge base as a single **LLM-ready** markdown file for RAG/agents.
 - **⚡ Fast to use** — fuzzy search (`f`), level & cluster filters, a ✦ "what's new" highlight, light/dark themes, and shareable deep links (`#concept=lora`).
-- **📱 Offline & installable** — zero dependencies, works over `file://`, installable as a PWA on desktop or mobile.
+- **📱 Offline & installable** — zero dependencies, works over `file://`, installable as a PWA on desktop or mobile, with the wizard, guided path, and compare tables available on the touch view too.
 
 ### Coverage
 

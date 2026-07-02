@@ -69,3 +69,5 @@ The open concept or comparison is encoded in the URL hash — `#concept=lora`, `
 ## Responsive
 
 The layout adapts to narrow screens; the legend dock collapses on mobile.
+
+On phones the app opens a dedicated **touch view** (`m.html`) — a searchable, filterable card list with a bottom-sheet detail for each concept. It has full parity with the desktop tools: a **tools row** under the search bar opens the **🧭 Which technique?** wizard, the **▶ Guided Path** stepper, and the **⚖️ Compare** tables (tabbed, horizontally scrollable), plus **★ Build map** for your personalized, shareable view.
