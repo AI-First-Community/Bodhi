@@ -44,6 +44,22 @@
     .m-levels::-webkit-scrollbar{display:none}
     .lchip{flex:0 0 auto;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;}
     .lchip.active{background:var(--card);color:var(--ink);border-color:var(--green);}
+    .m-tools{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none;}
+    .m-tools::-webkit-scrollbar{display:none}
+    .tchip{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border-radius:999px;border:1px solid rgba(79,224,138,.32);background:rgba(79,224,138,.07);color:var(--ink);font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;}
+    .tchip.active{background:var(--green);color:#06250f;border-color:var(--green);}
+    .m-anslist{display:flex;flex-direction:column;gap:9px;margin-top:2px;}
+    .m-ans{text-align:left;line-height:1.4;}
+    .m-reccard{border:1px solid var(--line);border-left:3px solid var(--c,var(--green));border-radius:12px;background:var(--card);padding:13px 14px;margin-top:2px;}
+    .m-reccard h2{margin:6px 0 8px;font-size:22px;}
+    .m-cmp-tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
+    .m-cmp-tabs::-webkit-scrollbar{display:none}
+    .m-cmp-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:4px;-webkit-overflow-scrolling:touch;}
+    table.m-cmp{border-collapse:collapse;font-size:12.5px;white-space:nowrap;min-width:100%;}
+    table.m-cmp th,table.m-cmp td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);}
+    table.m-cmp th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;background:var(--bg2);}
+    table.m-cmp tr:last-child td{border-bottom:0;}
+    .m-cmp-name{color:var(--green);font-weight:700;cursor:pointer;}
     .m-list{padding:4px 16px 40px;display:flex;flex-direction:column;gap:10px;}
     .m-group-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);
       font-weight:800;margin:16px 2px 3px;}
@@ -123,6 +139,11 @@
     <input id="search" class="m-search" type="text" placeholder="Search concepts…" autocomplete="off" autocapitalize="off" aria-label="Search concepts" />
   </header>
 
+  <nav class="m-tools" id="tools" aria-label="Interactive tools">
+    <button class="tchip" id="mWizard" type="button">🧭 Which technique?</button>
+    <button class="tchip" id="mPath" type="button">▶ Guided Path</button>
+    <button class="tchip" id="mCompare" type="button">⚖️ Compare</button>
+  </nav>
   <nav class="m-chips" id="chips" aria-label="Filter by cluster"></nav>
   <nav class="m-levels" id="levels" aria-label="Filter by level"></nav>
   <main class="m-list" id="list"></main>
@@ -136,6 +157,11 @@
   <div class="m-sheet" id="pickSheet" role="dialog" aria-modal="true" aria-label="Build your learning map">
     <div class="m-backdrop"></div>
     <div class="m-panel" id="pickPanel"></div>
+  </div>
+
+  <div class="m-sheet" id="toolSheet" role="dialog" aria-modal="true" aria-label="Interactive tools">
+    <div class="m-backdrop"></div>
+    <div class="m-panel" id="toolPanel"></div>
   </div>
 
   <script src="js/data.js"></script>
@@ -339,7 +365,103 @@
         if (e.target.classList.contains('m-backdrop') || e.target.classList.contains('m-close')) { closeSheet(); return; }
         var conn = e.target.closest('.m-conn'); if (conn) openSheet(conn.getAttribute('data-id'));
       });
-      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeSheet(); closePicker(); } });
+      // ---- Interactive tools: decision wizard, guided path, compare (parity with desktop) ----
+      var toolSheet = document.getElementById('toolSheet'), toolPanel = document.getElementById('toolPanel');
+      function setTool(headHtml, bodyHtml) {
+        toolPanel.innerHTML =
+          '<div class="m-head"><div class="m-grab"></div><button class="m-close" aria-label="Close">×</button>' + headHtml + '</div>' +
+          '<div class="m-body">' + bodyHtml + '</div>';
+        toolSheet.classList.add('open');
+        requestAnimationFrame(function () { toolPanel.scrollTop = 0; });
+        document.body.style.overflow = 'hidden';
+      }
+      function closeTool() { toolSheet.classList.remove('open'); document.body.style.overflow = ''; }
+
+      // Decision wizard
+      var DT = GRAPH.decisionTree;
+      function startWizard() { renderWizardStep(DT.start); }
+      function renderWizardStep(id) {
+        var step = DT.steps[id]; if (!step) return;
+        var ans = step.a.map(function (a, i) {
+          return '<button class="m-btn m-ans" data-w="ans" data-step="' + id + '" data-i="' + i + '">' + esc(a.label) + '</button>';
+        }).join('');
+        setTool('<div class="m-tag" style="--c:var(--green)">Which technique?</div><h2>' + esc(step.q) + '</h2>',
+          '<div class="m-anslist">' + ans + '</div>');
+      }
+      function renderWizardRec(a) {
+        var n = byId[a.rec], c = n ? (CLUSTERS[n.cluster] || { color: '#888', label: '' }) : { color: 'var(--green)', label: '' };
+        var body = '<div class="m-reccard" style="--c:' + c.color + '">' +
+          '<div class="m-tag" style="--c:' + c.color + '">' + esc(c.label) + ' · Recommended</div>' +
+          '<h2>' + esc(n ? n.label : a.rec) + '</h2>' +
+          (n ? '<div class="m-sum" style="--c:' + c.color + '">' + esc(n.summary) + '</div>' : '') +
+          (a.why ? '<div class="m-detail">' + esc(a.why) + '</div>' : '') + '</div>' +
+          '<div class="m-actions"><button class="m-btn" data-w="restart">↺ Start over</button>' +
+          (n ? '<button class="m-btn primary" data-w="open" data-id="' + a.rec + '">Open in graph →</button>' : '') + '</div>' +
+          (a.then ? '<div class="m-hint" style="text-align:center"><a href="#" data-w="cont" data-step="' + a.then + '">Continue — one more question ↓</a></div>' : '');
+        setTool('<div class="m-tag" style="--c:var(--green)">Recommendation</div><h2>' + esc(n ? n.label : a.rec) + '</h2>', body);
+      }
+
+      // Guided path
+      var GP = GRAPH.guidedPath, pathIdx = 0;
+      function startPath() { pathIdx = 0; renderPathStep(); }
+      function renderPathStep() {
+        var s = GP.steps[pathIdx], n = byId[s.id], c = n ? (CLUSTERS[n.cluster] || { color: '#888', label: '' }) : { color: 'var(--green)', label: '' };
+        var body = '<div class="m-path-note">Step ' + (pathIdx + 1) + ' / ' + GP.steps.length + '</div>' +
+          '<div class="m-reccard" style="--c:' + c.color + '">' +
+          '<div class="m-tag" style="--c:' + c.color + '">' + esc(c.label) + (n ? ' · L' + n.level : '') + '</div>' +
+          '<h2>' + esc(n ? n.label : s.id) + '</h2>' +
+          '<div class="m-detail">' + esc(s.note) + '</div></div>' +
+          '<div class="m-actions">' +
+          '<button class="m-btn" data-w="pprev"' + (pathIdx === 0 ? ' disabled' : '') + '>← Prev</button>' +
+          (n ? '<button class="m-btn" data-w="popen">Open detail</button>' : '') +
+          '<button class="m-btn primary" data-w="pnext"' + (pathIdx === GP.steps.length - 1 ? ' disabled' : '') + '>' + (pathIdx === GP.steps.length - 1 ? 'Done ✓' : 'Next →') + '</button></div>';
+        setTool('<div class="m-tag" style="--c:var(--green)">Guided Path</div><h2>' + esc(GP.title) + '</h2>', body);
+      }
+
+      // Compare tables
+      var CMP = GRAPH.comparisons, cmpIdx = 0;
+      function startCompare() { cmpIdx = 0; renderCompare(); }
+      function renderCompare() {
+        var set = CMP[cmpIdx];
+        var tabs = CMP.map(function (s, i) {
+          return '<button class="tchip' + (i === cmpIdx ? ' active' : '') + '" data-w="ctab" data-i="' + i + '">' + esc(s.title) + '</button>';
+        }).join('');
+        var thead = '<th>Technique</th>' + set.dimensions.map(function (d) { return '<th>' + esc(d.label) + '</th>'; }).join('');
+        var rows = set.rows.map(function (r) {
+          var n = byId[r.id];
+          var name = n ? '<td class="m-cmp-name" data-w="copen" data-id="' + r.id + '">' + esc(n.label) + '</td>' : '<td>' + esc(r.id) + '</td>';
+          var tds = set.dimensions.map(function (d) { return '<td>' + esc(r[d.key] == null ? '' : r[d.key]) + '</td>'; }).join('');
+          return '<tr>' + name + tds + '</tr>';
+        }).join('');
+        var body = '<div class="m-cmp-tabs">' + tabs + '</div>' +
+          '<div class="m-detail">' + esc(set.blurb) + '</div>' +
+          '<div class="m-cmp-scroll"><table class="m-cmp"><thead><tr>' + thead + '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
+          '<div class="m-hint">Tap a technique name to open it in the graph.</div>';
+        setTool('<div class="m-tag" style="--c:var(--green)">Compare</div><h2>' + esc(set.title) + '</h2>', body);
+      }
+
+      toolSheet.addEventListener('click', function (e) {
+        if (e.target.classList.contains('m-backdrop') || e.target.classList.contains('m-close')) { closeTool(); return; }
+        var t = e.target.closest('[data-w]'); if (!t) return;
+        var w = t.getAttribute('data-w');
+        if (w === 'ans') {
+          var st = DT.steps[t.getAttribute('data-step')], a = st.a[parseInt(t.getAttribute('data-i'), 10)];
+          if (a.rec) renderWizardRec(a); else if (a.next) renderWizardStep(a.next);
+        } else if (w === 'restart') { startWizard(); }
+        else if (w === 'cont') { e.preventDefault(); renderWizardStep(t.getAttribute('data-step')); }
+        else if (w === 'pprev') { if (pathIdx > 0) { pathIdx--; renderPathStep(); } }
+        else if (w === 'pnext') { if (pathIdx < GP.steps.length - 1) { pathIdx++; renderPathStep(); } }
+        else if (w === 'ctab') { cmpIdx = parseInt(t.getAttribute('data-i'), 10); renderCompare(); }
+        else if (w === 'open' || w === 'popen' || w === 'copen') {
+          var id = w === 'popen' ? GP.steps[pathIdx].id : t.getAttribute('data-id');
+          closeTool(); openSheet(id);
+        }
+      });
+      document.getElementById('mWizard').addEventListener('click', startWizard);
+      document.getElementById('mPath').addEventListener('click', startPath);
+      document.getElementById('mCompare').addEventListener('click', startCompare);
+
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeSheet(); closePicker(); closeTool(); } });
 
       // init My Map from a shared link (#map=cluster,cluster) or saved preference
       var hm = (location.hash.match(/map=([^&]+)/) || [])[1];
