@@ -16,12 +16,13 @@
   // Current release. Concepts whose frontmatter `added:` equals `version` are
   // surfaced as "new" in the app. Bump on each release and tag new concepts with
   // the new version to highlight what changed.
-  const RELEASE = { version: '0.4.0', label: 'v0.4.0' };
+  const RELEASE = { version: '0.5.0', label: 'v0.5.0' };
 
   const CLUSTERS = {
     foundations:  { label: 'Foundations',           color: '#3b82f6' },
     architecture: { label: 'Architecture',          color: '#8b5cf6' },
     modeltypes:   { label: 'Model Archetypes',      color: '#06b6d4' },
+    multimodal:   { label: 'Multimodal',            color: '#d946ef' },
     adaptation:   { label: 'Adaptation Spectrum',   color: '#f59e0b' },
     peft:         { label: 'PEFT',                  color: '#10b981' },
     sft:          { label: 'SFT / Instruction',     color: '#84cc16' },
@@ -37,6 +38,7 @@
     foundations: 'Concept',
     architecture: 'Architecture Component',
     modeltypes: 'Model Archetype',
+    multimodal: 'Multimodal / Vision',
     adaptation: 'Adaptation Strategy',
     peft: 'PEFT Method',
     sft: 'Training Method',

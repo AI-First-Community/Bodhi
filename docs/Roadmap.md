@@ -15,7 +15,7 @@ Bodhi Map is meant to be **kept current** — released in small, regular increme
 
 ## Candidate directions
 
-- **Multimodal cluster** — vision/language understanding (ViT, CLIP, VLMs, multimodal fusion) and possibly image generation/diffusion. Deferred from v0.4.0; the biggest scope decision, since it broadens "LLMs" toward "AI" as advertised.
+- **Multimodal cluster** — ✅ **shipped in v0.5.0** (ViT, CLIP, VLMs, multimodal fusion, diffusion). Room to grow: audio/speech, video, and more image-generation depth.
 - **More frontier coverage** — continue filling current-era gaps across architecture, efficiency, reasoning, and agents as techniques mature.
 - **Filtering & views** — quality-of-life on top of the existing level/cluster/New filters (e.g. saved views, "core vs extended" presets).
 - **Authoring ergonomics** — make contributing concepts even lower-friction.

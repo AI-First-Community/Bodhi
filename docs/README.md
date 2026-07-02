@@ -20,12 +20,12 @@ permalink: /docs/
 
 | | |
 |---|---|
-| **Concepts** | 123 across 11 clusters |
-| **Relations** | 229 typed edges (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`) |
+| **Concepts** | 128 across 12 clusters |
+| **Relations** | 240 typed edges (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`) |
 | **Runtime** | Single folder, no build step, no internet — works on a plane |
 | **Source format** | [Open Knowledge Format (OKF)](https://github.com/GoogleCloudPlatform/knowledge-catalog/tree/main/okf) bundle — markdown, git-shippable, agent-ready |
 | **License** | MIT |
-| **Current release** | v0.4.0 |
+| **Current release** | v0.5.0 |
 
 ## Why it exists (philosophy)
 

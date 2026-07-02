@@ -403,6 +403,7 @@
   // The 9 clusters map onto the three phases of the learning arc.
   const CLUSTER_GROUPS = [
     { title: 'Fundamentals',             clusters: ['foundations', 'architecture', 'modeltypes'] },
+    { title: 'Multimodal',               clusters: ['multimodal'] },
     { title: 'Adaptation & Fine-Tuning', clusters: ['adaptation', 'peft', 'sft'] },
     { title: 'Alignment & Reasoning',    clusters: ['alignment', 'reasoning'] },
     { title: 'Agents & Retrieval',       clusters: ['agents'] },

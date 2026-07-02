@@ -16,6 +16,10 @@ const CLUSTERS = {
     "label": "Model Archetypes",
     "color": "#06b6d4"
   },
+  "multimodal": {
+    "label": "Multimodal",
+    "color": "#d946ef"
+  },
   "adaptation": {
     "label": "Adaptation Spectrum",
     "color": "#f59e0b"
@@ -94,8 +98,8 @@ const RELATIONS = {
   }
 };
 const RELEASE = {
-  "version": "0.4.0",
-  "label": "v0.4.0"
+  "version": "0.5.0",
+  "label": "v0.5.0"
 };
 const GRAPH = {
   "nodes": [
@@ -550,6 +554,61 @@ const GRAPH = {
       ]
     },
     {
+      "id": "vit",
+      "label": "Vision Transformer (ViT)",
+      "type": "Multimodal / Vision",
+      "cluster": "multimodal",
+      "level": 2,
+      "summary": "Treat an image as a sequence of patches ('tokens') and run a standard Transformer over them — bringing self-attention to vision, no convolutions.",
+      "detail": "A Vision Transformer splits an image into fixed-size patches (e.g. 16×16), linearly embeds each patch, adds positional embeddings, and feeds the resulting sequence to a **standard Transformer encoder** — no convolutions. Given enough pretraining data it matches or beats CNNs, and because it is \"just a Transformer\" it inherits the whole ecosystem: self-attention, favorable scaling, and transfer learning. ViT is the vision backbone behind most multimodal models — it's the image encoder inside CLIP and the eyes of most vision-language models.",
+      "whenToUse": "The default image encoder for modern vision and vision-language models — especially with large-scale pretraining data.",
+      "refs": [
+        {
+          "t": "ViT — An Image is Worth 16x16 Words",
+          "u": "https://arxiv.org/abs/2010.11929"
+        }
+      ],
+      "added": "0.5.0"
+    },
+    {
+      "id": "clip",
+      "label": "CLIP (Contrastive Language–Image Pretraining)",
+      "type": "Multimodal / Vision",
+      "cluster": "multimodal",
+      "level": 3,
+      "summary": "Train an image encoder and a text encoder together with a contrastive loss so matching image–text pairs align in a shared embedding space — enabling zero-shot classification.",
+      "detail": "CLIP trains two encoders — a ViT (or ResNet) for images and a Transformer for text — on ~400M image–text pairs with a **contrastive objective**: pull matching image–text pairs together and push mismatched pairs apart in a shared embedding space. The result generalizes **zero-shot**: you classify an image by comparing its embedding to text prompts like *\"a photo of a {label}\"*, with no task-specific training. CLIP embeddings underpin much of multimodal AI — they are the vision front-end of many [vision-language models](/multimodal/vlm.md) and the text-conditioning signal for [diffusion](/multimodal/diffusion.md) image generators.",
+      "whenToUse": "Zero-shot image classification / retrieval, or as the vision encoder + image–text alignment layer inside a larger multimodal model or image generator.",
+      "refs": [
+        {
+          "t": "CLIP — Learning Transferable Visual Models From Natural Language Supervision",
+          "u": "https://arxiv.org/abs/2103.00020"
+        }
+      ],
+      "added": "0.5.0"
+    },
+    {
+      "id": "diffusion",
+      "label": "Diffusion Models (Image Generation)",
+      "type": "Multimodal / Vision",
+      "cluster": "multimodal",
+      "level": 3,
+      "summary": "Generate images by learning to reverse a gradual noising process — the approach behind modern text-to-image models, conditioned on a text embedding.",
+      "detail": "Diffusion models learn to invert a **forward process** that gradually adds Gaussian noise to data: a network is trained to *denoise*, and generation runs the denoiser step-by-step from pure noise to a clean sample. **Latent Diffusion** (Stable Diffusion) does this in a compressed latent space for efficiency, conditioned on a text embedding (often [CLIP](/multimodal/clip.md)'s) injected via cross-attention. Unlike an autoregressive decoder that emits tokens left-to-right, diffusion **refines the whole output iteratively** — the dominant approach for high-quality image, and increasingly video and audio, generation.",
+      "whenToUse": "Generating images (and increasingly audio/video) from text or other conditioning — a different generative paradigm from autoregressive LLMs.",
+      "refs": [
+        {
+          "t": "DDPM — Denoising Diffusion Probabilistic Models",
+          "u": "https://arxiv.org/abs/2006.11239"
+        },
+        {
+          "t": "Latent Diffusion (Stable Diffusion)",
+          "u": "https://arxiv.org/abs/2112.10752"
+        }
+      ],
+      "added": "0.5.0"
+    },
+    {
       "id": "adaptation",
       "label": "Adaptation Spectrum",
       "type": "Adaptation Strategy",
@@ -975,6 +1034,48 @@ const GRAPH = {
           "u": "https://arxiv.org/abs/2402.13753"
         }
       ]
+    },
+    {
+      "id": "multimodal-fusion",
+      "label": "Multimodal Fusion",
+      "type": "Multimodal / Vision",
+      "cluster": "multimodal",
+      "level": 4,
+      "summary": "How modalities are combined into one model: input-level projection, deep cross-attention, or late fusion — the core design choice behind any multimodal system.",
+      "detail": "Fusion is *how* two modalities are combined, and it spans a spectrum:\n\n- **Early / input fusion** — project encoded image features into embeddings the LLM consumes as if they were tokens (LLaVA). Simple and data-efficient; the dominant recipe.\n- **Deep / cross-attention fusion** — interleave gated cross-attention layers so the LLM attends to visual features at every block (Flamingo). More capacity, and it handles arbitrarily interleaved image–text.\n- **Late fusion** — encode each modality separately and combine only at the end (a dual-encoder like CLIP). Cheap and great for retrieval, but the modalities interact minimally.\n\nThe choice trades compute and training data against how tightly the modalities need to interact.",
+      "whenToUse": "Deciding how to wire a vision (or audio) encoder into an LLM — trading simplicity and data-efficiency against capacity.",
+      "refs": [
+        {
+          "t": "Flamingo — a Visual Language Model for Few-Shot Learning",
+          "u": "https://arxiv.org/abs/2204.14198"
+        },
+        {
+          "t": "LLaVA — Visual Instruction Tuning",
+          "u": "https://arxiv.org/abs/2304.08485"
+        }
+      ],
+      "added": "0.5.0"
+    },
+    {
+      "id": "vlm",
+      "label": "Vision-Language Models (VLMs)",
+      "type": "Multimodal / Vision",
+      "cluster": "multimodal",
+      "level": 4,
+      "summary": "Give an LLM eyes: connect a vision encoder to a language model and instruction-tune it, so the model can reason over images and text together.",
+      "detail": "A vision-language model (multimodal LLM) pairs a pretrained **vision encoder** (usually CLIP-ViT) with a pretrained **LLM**. A *connector* — a simple MLP projection (LLaVA) or gated cross-attention (Flamingo) — maps image features into the LLM's token space, and the model is fine-tuned on image–instruction data (**visual instruction tuning**). This reuses the LLM's reasoning while adding perception, so training is far cheaper than building a multimodal model from scratch. The same recipe extends to video, documents, and GUI screenshots — the perception layer behind [computer-use agents](/agents/computer-use.md).",
+      "whenToUse": "Any task mixing images and language — visual question answering, document/chart understanding, captioning, or GUI/agent perception.",
+      "refs": [
+        {
+          "t": "LLaVA — Visual Instruction Tuning",
+          "u": "https://arxiv.org/abs/2304.08485"
+        },
+        {
+          "t": "GPT-4V(ision) System Card",
+          "u": "https://openai.com/index/gpt-4v-system-card/"
+        }
+      ],
+      "added": "0.5.0"
     },
     {
       "id": "adalora",
@@ -2842,6 +2943,61 @@ const GRAPH = {
       "s": "decoder-gpt",
       "t": "moe",
       "r": "combines"
+    },
+    {
+      "s": "clip",
+      "t": "vit",
+      "r": "combines"
+    },
+    {
+      "s": "clip",
+      "t": "embedding",
+      "r": "builds-on"
+    },
+    {
+      "s": "diffusion",
+      "t": "clip",
+      "r": "combines"
+    },
+    {
+      "s": "diffusion",
+      "t": "decoder-gpt",
+      "r": "alternative"
+    },
+    {
+      "s": "multimodal-fusion",
+      "t": "attention",
+      "r": "builds-on"
+    },
+    {
+      "s": "multimodal-fusion",
+      "t": "vlm",
+      "r": "combines"
+    },
+    {
+      "s": "vit",
+      "t": "transformer",
+      "r": "builds-on"
+    },
+    {
+      "s": "vit",
+      "t": "embedding",
+      "r": "combines"
+    },
+    {
+      "s": "vlm",
+      "t": "clip",
+      "r": "builds-on"
+    },
+    {
+      "s": "vlm",
+      "t": "decoder-gpt",
+      "r": "combines"
+    },
+    {
+      "s": "vlm",
+      "t": "instruction-tuning",
+      "r": "builds-on"
     },
     {
       "s": "adapters",

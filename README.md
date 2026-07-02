@@ -16,7 +16,7 @@
 
 <p align="center"><a href="https://ai-first-community.github.io/Bodhi/"><b>▶ Try the live app</b></a></p>
 
-> **123 concepts · 11 clusters · fully offline · zero dependencies · MIT-licensed.**
+> **128 concepts · 12 clusters · fully offline · zero dependencies · MIT-licensed.**
 
 The hard part of learning modern AI isn't finding definitions — it's seeing the **connections** between techniques: what improves on what, what to use when, how it all fits into a pipeline. **Bodhi Map** lays it out as one navigable graph — every technique a node, every relationship a typed edge — so you can see the whole landscape, pick a path, and go deep where you want.
 
@@ -59,7 +59,7 @@ The hard part of learning modern AI isn't finding definitions — it's seeing th
 
 ## Features
 
-- **🕸️ Interactive graph** — 123 concepts across 11 clusters, color-coded, with **typed edges** (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`) on a clean force-directed layout.
+- **🕸️ Interactive graph** — 128 concepts across 12 clusters, color-coded, with **typed edges** (`is-a`, `improves-on`, `alternative`, `requires`, `combines`, `builds-on`) on a clean force-directed layout.
 - **🔍 Rich detail on every node** — plain-language summary, deeper detail, *when to use*, a code snippet, its connections, and paper references.
 - **🧭 Which technique?** — a decision wizard that recommends the right approach (RAG vs prompting vs LoRA/QLoRA vs full fine-tuning vs DPO/RLVR).
 - **▶ Guided Path** — an animated walkthrough of a real workflow (base model → SFT → LoRA → DPO → eval → quantize).
@@ -71,7 +71,7 @@ The hard part of learning modern AI isn't finding definitions — it's seeing th
 
 ### Coverage
 
-Foundations & architecture (tokens → attention → MoE) · the full adaptation ladder · all major PEFT methods · SFT & instruction tuning · preference alignment (RLHF/PPO, DPO, IPO, KTO, ORPO, SimPO, GRPO, RLVR, RLAIF) · efficiency (quantization, GPTQ/AWQ, distillation, FSDP/ZeRO, FlashAttention, speculative decoding, model merging) · reasoning, agents, data & evaluation.
+Foundations & architecture (tokens → attention → MoE) · **multimodal** (ViT, CLIP, VLMs, fusion, diffusion) · the full adaptation ladder · all major PEFT methods · SFT & instruction tuning · preference alignment (RLHF/PPO, DPO, IPO, KTO, ORPO, SimPO, GRPO, RLVR, RLAIF) · efficiency (quantization, GPTQ/AWQ, distillation, FSDP/ZeRO, FlashAttention, speculative decoding, model merging) · reasoning, agents, data & evaluation.
 
 ## Why "Bodhi"? — motivation & philosophy
 

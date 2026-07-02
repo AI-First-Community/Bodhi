@@ -7,6 +7,17 @@ nav_order: 10
 
 Notable changes per release. The in-app **New** chip always reflects the current release's additions (see [Release Process](Release-Process.md)).
 
+## v0.5.0
+
+**Content** — 123 → **128 concepts**, **240 edges**. New **Multimodal** cluster (broadening scope from LLMs toward AI):
+- `vit` — Vision Transformer (ViT)
+- `clip` — CLIP (contrastive language–image pretraining)
+- `vlm` — Vision-Language Models
+- `multimodal-fusion` — Multimodal Fusion (early / cross-attention / late)
+- `diffusion` — Diffusion Models (image generation)
+
+**Also this release** (shipped as features on top of v0.4.0): installable **PWA** (offline), a **mobile view** (`m.html`), **"Build your own learning map"** on desktop + mobile, plus the demo showcase and social assets.
+
 ## v0.4.0
 
 **Content** — 118 → **123 concepts**, **229 edges**. Added five core gaps:
