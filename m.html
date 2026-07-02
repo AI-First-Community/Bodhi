@@ -149,6 +149,7 @@
       function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]; }); }
 
       document.getElementById('count').textContent = nodes.length + ' concepts';
+      (function () { var f = document.querySelector('.m-foot'); if (f && typeof RELEASE !== 'undefined' && RELEASE) f.insertAdjacentHTML('beforeend', ' · <span style="opacity:.6">' + (RELEASE.label || ('v' + RELEASE.version)) + '</span>'); })();
 
       // cluster chips (rebuilt when My Map changes)
       var chipsEl = document.getElementById('chips');

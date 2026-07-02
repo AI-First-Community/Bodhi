@@ -1009,6 +1009,14 @@
   // first-visit onboarding (skipped when arriving via a shared deep link)
   maybeShowWelcome();
 
+  // tiny version tag in the hint bar (auto-updates from the RELEASE marker)
+  try {
+    const hintEl = document.querySelector('.hint');
+    if (hintEl && typeof RELEASE !== 'undefined' && RELEASE) {
+      hintEl.insertAdjacentHTML('beforeend', ' · <span style="opacity:.55">' + (RELEASE.label || ('v' + RELEASE.version)) + '</span>');
+    }
+  } catch (e) {}
+
   // expose for debugging
   window._cy = cy;
 })();
